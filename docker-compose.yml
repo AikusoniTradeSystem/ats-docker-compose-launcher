@@ -7,8 +7,6 @@ services:
       LOG_HOME: logs
       SERVER_PORT: 8900
       SPRING_PROFILES_ACTIVE: local
-    ports:
-      - "8900:8900"
     networks:
       - internal_network
 
@@ -23,8 +21,6 @@ services:
       LOG_HOME: logs
       SERVER_PORT: 8000
       SPRING_PROFILES_ACTIVE: local
-    ports:
-      - "8000:8000"
     networks:
       - internal_network
 
