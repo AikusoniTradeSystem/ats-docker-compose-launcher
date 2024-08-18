@@ -1,0 +1,35 @@
+version: '3'
+services:
+  ats-session-auth-server:
+    image: ats-session-auth-server:latest
+    container_name: ats-session-auth-server
+    networks:
+      - internal_network
+
+  ats-test-server-spring:
+    image: ats-test-server-spring:latest
+    container_name: ats-test-server-spring
+    networks:
+      - internal_network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - ats-session-auth-server
+      - ats-test-server-spring
+    networks:
+      - internal_network
+      - external_network
+
+networks:
+  internal_network:
+    driver: bridge
+  external_network:
+    driver: bridge
