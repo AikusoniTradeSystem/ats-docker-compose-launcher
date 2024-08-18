@@ -16,6 +16,7 @@ $ vi docker-compose.yml
 ```
 
 다음은 설정 예시입니다.
+
 ![docker-compose-example](./documents/imgs/docker-compose-example.png)
 
 3. docker-compose를 실행한다.
