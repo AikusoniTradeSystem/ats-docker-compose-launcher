@@ -3,6 +3,8 @@ services:
   ats-test-server-spring:
     image: aikusoni/ats-test-server-spring:latest
     container_name: ats-test-server-spring
+    volumes:
+      - ${TEST_SERVER_SPRING_LOG_HOME}:/logs
     environment:
       LOG_HOME: logs
       SERVER_PORT: 8900
@@ -13,11 +15,13 @@ services:
   ats-session-auth-server:
     image: aikusoni/ats-session-auth-server:latest
     container_name: ats-session-auth-server
+    volumes:
+      - ${SESSION_AUTH_SERVER_LOG_HOME}:/logs
     environment:
-      DB_USER:
-      DB_PASSWORD:
-      DB_DRIVER_CLASS_NAME:
-      DB_URL:
+      DB_USER: ${AUTH_DB_USER}
+      DB_PASSWORD: ${AUTH_DB_PASSWORD}
+      DB_DRIVER_CLASS_NAME: ${AUTH_DB_DRIVER_CLASS_NAME}
+      DB_URL: ${AUTH_DB_URL}
       LOG_HOME: logs
       SERVER_PORT: 8000
       SPRING_PROFILES_ACTIVE: local
@@ -31,6 +35,7 @@ services:
       - "8080:8080"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${NGINX_LOG_HOME}:/var/log/nginx
     depends_on:
       - ats-test-server-spring
       - ats-session-auth-server
