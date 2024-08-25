@@ -19,7 +19,7 @@ $ vi ats_start.sh
 #!/bin/bash
 (
   # subshell
-  # environment variables
+  # environment variables (example)
   export AUTH_DB_USER=sa
   export AUTH_DB_PASSWORD=password
   export AUTH_DB_DRIVER_CLASS_NAME=org.h2.Driver
@@ -58,16 +58,6 @@ $ vi ats_stop.sh
 
 #!/bin/bash
 (
-  # subshell
-  # environment variables
-  export AUTH_DB_USER=sa
-  export AUTH_DB_PASSWORD=password
-  export AUTH_DB_DRIVER_CLASS_NAME=org.h2.Driver
-  export AUTH_DB_URL=jdbc::h2::mem:testdb
-  export TEST_SERVER_SPRING_LOG_HOME=~/ats/logs/TestServer
-  export SESSION_AUTH_SERVER_LOG_HOME=~/ats/logs/SessionAuthServer
-  export NGINX_LOG_HOME=~/ats/logs/nginx
-
   docker compose down
 )
 ```
