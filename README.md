@@ -28,7 +28,8 @@ $ vi ats_start.sh
   export SESSION_AUTH_SERVER_LOG_HOME=~/ats/logs/SessionAuthServer
   export NGINX_LOG_HOME=~/ats/logs/nginx
 
-  nohup docker compose up -d &
+  docker compose pull # pull newest docker image
+  docker compose up -d
 )
 ```
 
