@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   ats-test-server-spring:
     image: aikusoni/ats-test-server-spring:latest
@@ -14,7 +13,6 @@ services:
 
   ats-session-auth-server:
     image: aikusoni/ats-session-auth-server:latest
-    container_name: ats-session-auth-server
     volumes:
       - ${SESSION_AUTH_SERVER_LOG_HOME:-./logs/session}:/logs
     environment:
@@ -25,6 +23,24 @@ services:
       LOG_HOME: logs
       SERVER_PORT: 8000
       SPRING_PROFILES_ACTIVE: local
+      REDIS_HOST: session-cluster-redis
+      REDIS_PORT: 6379
+    deploy:
+      replicas: 2  # Number of replicas for scaling
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - session-cluster-redis
+    networks:
+      - internal_network
+
+  session-cluster-redis:
+    image: redis:latest
+    container_name: session-cluster-redis
+    command: [ "redis-server", "--port", "6379" ]
     networks:
       - internal_network
 
