@@ -4,7 +4,7 @@ services:
     image: aikusoni/ats-test-server-spring:latest
     container_name: ats-test-server-spring
     volumes:
-      - ${TEST_SERVER_SPRING_LOG_HOME:./logs/test}:/logs
+      - ${TEST_SERVER_SPRING_LOG_HOME:-./logs/test}:/logs
     environment:
       LOG_HOME: logs
       SERVER_PORT: 8900
