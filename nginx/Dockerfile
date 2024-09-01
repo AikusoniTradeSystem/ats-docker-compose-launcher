@@ -29,7 +29,7 @@ RUN wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
     tar zxvf nginx-$NGINX_VERSION.tar.gz && \
     git clone https://github.com/openresty/headers-more-nginx-module.git && \
     cd headers-more-nginx-module && \
-    git checkout tags/v0.33 -b v0.33
+    git checkout tags/v0.37 -b v0.37
 
 # Compile NGINX with the headers-more module
 RUN cd nginx-$NGINX_VERSION && \
