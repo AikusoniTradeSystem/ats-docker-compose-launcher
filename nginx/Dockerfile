@@ -11,16 +11,31 @@ RUN apt-get update && apt-get install -y \
     wget \
     gnupg2 \
     ca-certificates \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Download the source code for the specific version of NGINX
-RUN NGINX_VERSION=$(nginx -v 2>&1 | cut -d '/' -f 2) && \
-    wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
+# Set environment variable for NGINX version
+ENV NGINX_VERSION=$(nginx -v 2>&1 | cut -d '/' -f 2)
+
+# Download NGINX source and headers-more module source
+RUN wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
     tar zxvf nginx-$NGINX_VERSION.tar.gz && \
-    cd nginx-$NGINX_VERSION && \
-    ./configure --with-http_ssl_module --with-http_v2_module --with-http_auth_request_module && \
+    git clone https://github.com/openresty/headers-more-nginx-module.git && \
+    cd headers-more-nginx-module && \
+    git checkout tags/v0.33 -b v0.33
+
+# Compile NGINX with the headers-more module
+RUN cd nginx-$NGINX_VERSION && \
+    ./configure \
+    --with-http_ssl_module \
+    --with-http_v2_module \
+    --with-http_auth_request_module \
+    --add-module=../headers-more-nginx-module && \
     make && \
     make install
+
+# Clean up the source files to reduce image size
+RUN rm -rf /nginx-$NGINX_VERSION && rm nginx-$NGINX_VERSION.tar.gz && rm -rf headers-more-nginx-module
 
 # Copy the NGINX configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
