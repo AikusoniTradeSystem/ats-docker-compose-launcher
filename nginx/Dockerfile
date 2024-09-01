@@ -15,7 +15,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set environment variable for NGINX version
-ENV NGINX_VERSION=$(nginx -v 2>&1 | cut -d '/' -f 2)
+
+
+# Run a command and set the environment variable
+RUN export NGINX_VERSION=$(nginx -v 2>&1 | cut -d '/' -f 2) && \
+    echo "Environment variable $NGINX_VERSION is set to: $NGINX_VERSION"
+
+# Use ENV to persist the environment variable
+ENV NGINX_VERSION=$NGINX_VERSION
 
 # Download NGINX source and headers-more module source
 RUN wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
