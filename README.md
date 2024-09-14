@@ -17,20 +17,21 @@ $ git clone https://github.com/AikusoniTradeSystem/ats-quick-launcher.git
 $ vi ats_start.sh
 
 #!/bin/bash
-(
-  # subshell
-  # environment variables (example)
-  export AUTH_DB_USER=sa
-  export AUTH_DB_PASSWORD=password
-  export AUTH_DB_DRIVER_CLASS_NAME=org.h2.Driver
-  export AUTH_DB_URL=jdbc::h2::mem:testdb
-  export TEST_SERVER_SPRING_LOG_HOME=~/ats/logs/TestServer
-  export SESSION_AUTH_SERVER_LOG_HOME=~/ats/logs/SessionAuthServer
-  export NGINX_LOG_HOME=~/ats/logs/nginx
 
-  docker compose pull # pull newest docker image
+(
+  # host environment variables
+  export NGINX_LOG_HOME=/home/ats/logs/nginx
+  export TEST_SERVER_SPRING_LOG_HOME=/home/ats/logs/test-server-spring
+  export SESSION_AUTH_SERVER_LOG_HOME=/home/ats/logs/session-auth-server
+  export PG_DATA=/home/ats/pg_data
+  
+  # You can add more environment variables here (See docker-compose.yml)
+
+  # run docker compose
+  docker compose pull
   docker compose up -d
 )
+[cent
 ```
 
 3. 작성한 쉘 스크립트를 실행한다.
