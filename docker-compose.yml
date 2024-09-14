@@ -16,10 +16,10 @@ services:
     volumes:
       - ${SESSION_AUTH_SERVER_LOG_HOME:-./logs/session}:/logs
     environment:
-      DB_USER: ${AUTH_DB_USER:-sa}
-      DB_PASSWORD: ${AUTH_DB_PASSWORD:-password}
-      DB_DRIVER_CLASS_NAME: ${AUTH_DB_DRIVER_CLASS_NAME:-org.h2.Driver}
-      DB_URL: ${AUTH_DB_URL:-jdbc:h2:mem:testdb}
+      DB_USER: ${AUTH_DB_USER:-user}
+      DB_PASSWORD: ${AUTH_DB_PASSWORD:-user123}
+      DB_DRIVER_CLASS_NAME: ${AUTH_DB_DRIVER_CLASS_NAME:-org.postgresql.Driver}
+      DB_URL: ${AUTH_DB_URL:-jdbc:postgresql://ats-user-db:5432/userdb}
       LOG_HOME: logs
       SERVER_PORT: 8000
       SPRING_PROFILES_ACTIVE: local
@@ -34,6 +34,7 @@ services:
         condition: on-failure
     depends_on:
       - session-cluster-redis
+      - ats-user-db
     networks:
       - internal_network
 
@@ -41,6 +42,21 @@ services:
     image: redis:latest
     container_name: session-cluster-redis
     command: [ "redis-server", "--port", "6379" ]
+    networks:
+      - internal_network
+
+  ats-user-db:
+    image: postgres:latest
+    container_name: ats-user-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user123
+      POSTGRES_DB: userdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
     networks:
       - internal_network
 
@@ -62,5 +78,6 @@ services:
 networks:
   internal_network:
     driver: bridge
+    internal: true
   external_network:
     driver: bridge
