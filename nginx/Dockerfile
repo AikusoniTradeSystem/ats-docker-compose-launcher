@@ -27,8 +27,6 @@ ENV NGINX_VERSION=$NGINX_VERSION
 # Download NGINX source and headers-more module source
 RUN wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
     tar zxvf nginx-$NGINX_VERSION.tar.gz && \
-    git clone https://github.com/openresty/headers-more-nginx-module.git && \
-    cd headers-more-nginx-module && \
     git checkout tags/v0.37 -b v0.37
 
 # Compile NGINX with the headers-more module
@@ -37,12 +35,11 @@ RUN cd nginx-$NGINX_VERSION && \
     --with-http_ssl_module \
     --with-http_v2_module \
     --with-http_auth_request_module \
-    --add-module=../headers-more-nginx-module && \
     make && \
     make install
 
 # Clean up the source files to reduce image size
-RUN rm -rf /nginx-$NGINX_VERSION && rm nginx-$NGINX_VERSION.tar.gz && rm -rf headers-more-nginx-module
+RUN rm -rf /nginx-$NGINX_VERSION && rm nginx-$NGINX_VERSION.tar.gz
 
 # Copy the NGINX configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
