@@ -56,7 +56,7 @@ services:
       - "5432:5432"
     volumes:
       - ${PG_DATA:-./pg_data}:/var/lib/postgresql/data
-      - ${PG_USER_INIT:./pg_user_init}:/docker-entrypoint-initdb.d
+      - ${PG_USER_INIT:-./pg_user_init}:/docker-entrypoint-initdb.d
     networks:
       - internal_network
 
