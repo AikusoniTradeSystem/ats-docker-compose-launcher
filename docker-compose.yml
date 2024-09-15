@@ -60,6 +60,13 @@ services:
     networks:
       - internal_network
 
+  ats-landing:
+    image: aikusoni/ats-landing:latest
+    container_name: ats-landing
+    volumes:
+      - frontend_landing_volume:/upload_target
+    command: [ "/bin/sh", "-c", "cp -r /dist/* /upload_target/" ]
+
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -68,6 +75,7 @@ services:
     volumes:
       - ${NGINX_CONF:-./nginx/nginx.conf}:/etc/nginx/nginx.conf
       - ${NGINX_LOG_HOME:-./logs/nginx}:/var/log/nginx
+      - frontend_landing_volume:/usr/share/nginx/html/landing
     depends_on:
       - ats-test-server-spring
       - ats-session-auth-server
@@ -81,3 +89,7 @@ networks:
     internal: true
   external_network:
     driver: bridge
+
+volumes:
+  frontend_landing_volume:
+    external: false
