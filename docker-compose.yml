@@ -68,7 +68,9 @@ services:
     command: [ "/bin/sh", "-c", "cp -r /dist/* /upload_target/" ]
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nginx
     ports:
       - "8080:8080"
