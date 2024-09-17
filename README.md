@@ -30,13 +30,16 @@ $ vi ats_start.sh
   # run docker compose
   docker compose pull
   docker compose up -d
+  
+  # If you want to use dev image, use the following command
+  # docker compose up -f docker-compose.dev.yml -d 
 )
 [cent
 ```
 
 3. 작성한 쉘 스크립트를 실행한다.
 ```sh
-# 권한 문제가 있으니 sudo 명령을 사용해야 할 수 도 있습니다.
+# If you have permission issues, you may need to use sudo.
 $ chmod +x ats_start.sh
 $ ./ats_stop.sh
 ```
@@ -65,7 +68,7 @@ $ vi ats_stop.sh
 
 2. 작성한 쉘 스크립트를 실행한다.
 ```sh
-# 권한 문제가 있을 수 있으니, sudo를 사용해야 할 수도 있습니다.
+# If you have permission issues, you may need to use sudo.
 $ chmod +x ats_stop.sh
 $ ./ats_stop.sh
 ```
