@@ -41,9 +41,6 @@ RUN cd nginx-$NGINX_VERSION && \
 # Clean up the source files to reduce image size
 RUN rm -rf /nginx-$NGINX_VERSION && rm nginx-$NGINX_VERSION.tar.gz
 
-# Copy the NGINX configuration file
-COPY nginx.conf /etc/nginx/nginx.conf
-
 # Expose the necessary ports
 EXPOSE 8080
 
