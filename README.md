@@ -51,7 +51,7 @@ $ vi ats_start.sh
 ```sh
 # If you have permission issues, you may need to use sudo.
 $ chmod +x ats_start.sh
-$ ./ats_stop.sh
+$ ./ats_start.sh
 ```
 
 ### 확인
@@ -73,6 +73,9 @@ $ vi ats_stop.sh
 #!/bin/bash
 (
   docker compose down
+
+  # If you want to use dev image, use the following command
+  # docker compose -f docker-compose.dev.yml down
 )
 ```
 
