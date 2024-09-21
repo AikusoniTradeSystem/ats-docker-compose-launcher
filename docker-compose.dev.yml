@@ -74,10 +74,15 @@ services:
     container_name: nginx
     ports:
       - "8080:8080"
+      - "8001:8001"
     volumes:
       - ${NGINX_CONF:-./nginx/nginx.conf}:/etc/nginx/nginx.conf
       - ${NGINX_LOG_HOME:-./logs/nginx}:/var/log/nginx
+      - ${NGINX_CONF_D:-./nginx/conf.d}:/etc/nginx/conf.d
       - frontend_landing_volume:/usr/share/nginx/html/landing
+      - ${NGINX_503:-./nginx/503.html}:/usr/share/nginx/html/503.html
+#    user:
+#      ${NGINX_USER:-root} # Setup user for nginx container to access docker
     depends_on:
       - ats-test-server-spring
       - ats-session-auth-server
