@@ -44,7 +44,6 @@ $ vi ats_start.sh
   # docker compose -f docker-compose.dev.yml build --no-cache
   # docker compose -f docker-compose.dev.yml up -d
 )
-[cent
 ```
 
 3. 작성한 쉘 스크립트를 실행한다.
