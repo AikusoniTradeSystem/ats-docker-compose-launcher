@@ -46,7 +46,7 @@ services:
       - internal_network
 
   ats-user-db:
-    image: postgres:latest
+    image: postgres:17
     container_name: ats-user-db
     environment:
       POSTGRES_USER: user

@@ -1,7 +1,7 @@
 services:
   ats-cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
+    container_name: ats-cadvisor
     ports:
       - "8080:8080"  # Expose cAdvisor on port 8080
     volumes:
@@ -15,7 +15,7 @@ services:
 
   ats-prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: ats-prometheus
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     volumes:
@@ -26,7 +26,7 @@ services:
 
   ats-grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: ats-grafana
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
     environment:
@@ -42,8 +42,8 @@ services:
       - "4317:4317"
       - "55680:55680"
     volumes:
-      - ./opentelemetry/otel-config.yaml:/etc/otel/config.yaml
-    command: [ "--config", "/etc/otel/config.yaml" ]
+      - ./opentelemetry/otel-config.yml:/etc/otel/config.yml
+    command: [ "--config", "/etc/otel/config.yml" ]
     networks:
       - internal_network
 
