@@ -17,7 +17,7 @@
 $ git clone https://github.com/AikusoniTradeSystem/ats-quick-launcher.git
 ```
 
-2. docker_compose_config 폴더에 쉘 스크립트를 만든다. \
+2. 프로젝트 루트에 쉘 스크립트를 만든다. \
 이 쉘 스크립트는 필요한 환경변수를 설정하고 도커 컴포즈를 올리는 역할을 한다.
 > 다음은 예시 스크립트
 ```sh
@@ -63,7 +63,7 @@ $ curl http://localhost:8080/api/test-server-spring/swagger-ui/index.html
 ![server-running](./documents/imgs/server-running-test.png)
 
 ### 끄는 법
-1. docker_compose_config 폴더에 쉘 스크립트를 만든다. \
+1. 프로젝트 루트에 쉘 스크립트를 만든다. \
 이 스크립트는 환경변수를 설정하고 도커 컴포즈를 내리는 역할을 한다.
 > 다음은 예시 스크립트
 ```sh
@@ -86,7 +86,7 @@ $ ./ats_stop.sh
 ```
 
 ### 모니터링 켜는 법
-1. docker_compose_config 폴더에 쉘 스크립트를 만든다. \
+1. 프로젝트 루트에 쉘 스크립트를 만든다. \
 이 스크립트는 환경변수를 설정하고 도커 컴포즈를 올리는 역할을 한다.
 > 다음은 예시 스크립트
 ```sh
@@ -117,7 +117,7 @@ $ ./ats_stop.sh
 ```
 
 ### 모니터링 끄는 법
-1. docker_compose_config 폴더에 쉘 스크립트를 만든다. \
+1. 프로젝트 루트에 쉘 스크립트를 만든다. \
 이 스크립트는 환경변수를 설정하고 도커 컴포즈를 내리는 역할을 한다.
 > 다음은 예시 스크립트
 ```sh

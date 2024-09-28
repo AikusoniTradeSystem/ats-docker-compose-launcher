@@ -19,7 +19,7 @@ services:
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     volumes:
-      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - internal_network
       - external_network
@@ -42,7 +42,7 @@ services:
       - "4317:4317"
       - "55680:55680"
     volumes:
-      - ../opentelemetry/otel-config.yaml:/etc/otel/config.yaml
+      - ./opentelemetry/otel-config.yaml:/etc/otel/config.yaml
     command: [ "--config", "/etc/otel/config.yaml" ]
     networks:
       - internal_network
