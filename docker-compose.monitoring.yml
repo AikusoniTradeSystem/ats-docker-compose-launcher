@@ -43,7 +43,7 @@ services:
       - "55680:55680"
     volumes:
       - ./opentelemetry/otel-config.yml:/etc/otel/config.yml
-    command: [ "--config", "/etc/otel/config.yaml" ]
+    command: [ "--config", "/etc/otel/config.yml" ]
     networks:
       - internal_network
 
