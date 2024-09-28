@@ -6,9 +6,9 @@ receivers:
 
 exporters:
   logging:
-    logLevel: info
+    loglevel: info
   prometheus:
-    endpoint: "0.0.0.0:8888"
+    endpoint: "0.0.0.0:9999"
 
 service:
   pipelines:
