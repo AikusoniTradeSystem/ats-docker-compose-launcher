@@ -34,6 +34,7 @@ services:
         condition: on-failure
     depends_on:
       - session-cluster-redis
+      - vault
       - ats-user-db
     networks:
       - internal_network
@@ -44,6 +45,24 @@ services:
     command: [ "redis-server", "--port", "6379" ]
     networks:
       - internal_network
+
+  vault:
+    image: hashicorp/vault:1.16
+    container_name: ats-vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "${VAULT_DEV_ROOT_TOKEN_ID:-root}:root"
+    ports:
+      - "${VAULT_PORT:-18200}:8200"
+    volumes:
+      - ./vault/config/vault-config.hcl:/vault/config/vault-config.hcl:ro
+      - ./vault/data:/vault/data
+    command: "vault server -config=/vault/config/vault-config.hcl"
+    depends_on:
+      - ats-user-db
+    networks:
+      - vault_network
 
   ats-user-db:
     image: postgres:17
@@ -96,6 +115,9 @@ networks:
     internal: true
   external_network:
     driver: bridge
+  vault_network:
+    driver: bridge
+    internal: true
 
 volumes:
   frontend_landing_volume:
