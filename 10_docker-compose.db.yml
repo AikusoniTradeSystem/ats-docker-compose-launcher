@@ -1,0 +1,26 @@
+services:
+  session-cluster-redis:
+    image: redis:latest
+    container_name: session-cluster-redis
+    command: [ "redis-server", "--port", "6379" ]
+    networks:
+      - ats_internal_network
+
+  ats-user-db:
+    image: postgres:17
+    container_name: ats-user-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user123
+      POSTGRES_DB: userdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ${PG_DATA:-./pg_data}:/var/lib/postgresql/data
+      - ${PG_USER_INIT:-./pg_user_init}:/docker-entrypoint-initdb.d
+    networks:
+      - ats_internal_network
+
+networks:
+  ats_internal_network:
+    external: true
