@@ -1,47 +1,36 @@
-FROM nginx:latest
+FROM alpine:latest
 
-# Install dependencies required to build NGINX modules
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpcre3 \
-    libpcre3-dev \
-    zlib1g \
-    zlib1g-dev \
-    libssl-dev \
+# Install dependencies
+RUN apk add --no-cache \
+    build-base \
+    pcre-dev \
+    zlib-dev \
+    openssl-dev \
     wget \
-    gnupg2 \
-    ca-certificates \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    git
 
-# Set environment variable for NGINX version
+# Set the environment variable for the NGINX version
+ARG NGINX_VERSION=1.27.2
 
-
-# Run a command and set the environment variable
-RUN export NGINX_VERSION=$(nginx -v 2>&1 | cut -d '/' -f 2) && \
-    echo "Environment variable $NGINX_VERSION is set to: $NGINX_VERSION"
-
-# Use ENV to persist the environment variable
-ENV NGINX_VERSION=$NGINX_VERSION
-
-# Download NGINX source and headers-more module source
+# Download and extract NGINX source
 RUN wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
-    tar zxvf nginx-$NGINX_VERSION.tar.gz && \
-    git checkout tags/v0.37 -b v0.37
+    tar zxvf nginx-$NGINX_VERSION.tar.gz
 
-# Compile NGINX with the headers-more module
+# Compile NGINX with the desired modules
 RUN cd nginx-$NGINX_VERSION && \
     ./configure \
+    --prefix=/custom/nginx \
     --with-http_ssl_module \
     --with-http_v2_module \
-    --with-http_auth_request_module \
+    --with-http_auth_request_module && \
     make && \
     make install
 
-# Clean up the source files to reduce image size
-RUN rm -rf /nginx-$NGINX_VERSION && rm nginx-$NGINX_VERSION.tar.gz
+# Clean up to reduce image size
+RUN rm -rf nginx-$NGINX_VERSION nginx-$NGINX_VERSION.tar.gz
 
 # Expose the necessary ports
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# Run NGINX
+CMD ["/custom/nginx/sbin/nginx", "-g", "daemon off;"]

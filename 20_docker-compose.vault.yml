@@ -1,0 +1,22 @@
+services:
+  vault:
+    image: hashicorp/vault:1.17
+    container_name: ats-vault
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "${VAULT_PORT:-8200}:8200"
+    volumes:
+      - ./vault/config/vault-config.hcl:/vault/config/vault-config.hcl:ro
+      - ${VAULT_DATA_PATH:-./vault/data}:/vault/data
+      - ${VAULT_LOG_PATH:-./logs/vault}:/vault/logs
+    command: "vault server -config=/vault/config/vault-config.hcl"
+    networks:
+      - ats_internal_network
+      - ats_vault_network
+
+networks:
+  ats_internal_network:
+    external: true
+  ats_vault_network:
+    external: true

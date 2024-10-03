@@ -11,7 +11,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     restart: unless-stopped
     networks:
-      - internal_network
+      - ats_internal_network
 
   ats-prometheus:
     image: prom/prometheus:latest
@@ -21,8 +21,8 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
-      - internal_network
-      - external_network
+      - ats_internal_network
+      - ats_monitoring_network
 
   ats-grafana:
     image: grafana/grafana:latest
@@ -32,8 +32,8 @@ services:
     environment:
       - ${GF_SECURITY_ADMIN_PASSWORD:-admin}
     networks:
-      - internal_network
-      - external_network
+      - ats_internal_network
+      - ats_monitoring_network
 
   ats-otel-collector:
     image: otel/opentelemetry-collector:latest
@@ -45,12 +45,12 @@ services:
       - ./opentelemetry/otel-config.yml:/etc/otel/config.yml
     command: [ "--config", "/etc/otel/config.yml" ]
     networks:
-      - internal_network
-
+      - ats_internal_network
 
 networks:
-  internal_network:
-    driver: bridge
-    internal: true  
-  external_network:
-    driver: bridge  
+  ats_internal_network:
+    external: true
+  ats_vault_network:
+    external: true
+  ats_monitoring_network:
+    external: true
