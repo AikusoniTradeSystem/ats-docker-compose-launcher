@@ -18,7 +18,9 @@
 > 3. 30_docker-compose.monitoring.yml
 > 4. 40_docker-compose.yml (혹은 40_docker-compose.dev.yml)
 
-1. 이 레포지토리를 클론한다.
+* 프로젝트 루트에 예시로 작성된 배치 스크립트도 있습니다.
+
+1. 이 레포지토리를 클론한다.   
 ```sh
 $ git clone https://github.com/AikusoniTradeSystem/ats-quick-launcher.git
 ```
