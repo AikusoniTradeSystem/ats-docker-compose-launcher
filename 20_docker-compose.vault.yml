@@ -10,6 +10,7 @@ services:
       - ./vault/config/vault-config.hcl:/vault/config/vault-config.hcl:ro
       - ${VAULT_DATA_PATH:-./vault/data}:/vault/data
       - ${VAULT_LOG_PATH:-./logs/vault}:/vault/logs
+      - ${CERT_PATH:-./certs}:/etc/ssl/certs
     command: "vault server -config=/vault/config/vault-config.hcl"
     networks:
       - ats_internal_network

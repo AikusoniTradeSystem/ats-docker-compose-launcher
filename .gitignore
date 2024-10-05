@@ -1,5 +1,7 @@
 logs/*
 storage/*
+certs/*
+pg_data/*
 
 !logs/
 !storage/
