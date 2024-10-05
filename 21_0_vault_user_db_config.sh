@@ -11,8 +11,10 @@
   export SSL_ROOTCERT="/etc/ssl/certs/ca.crt"
   export SSL_CERT="/etc/ssl/certs/client.crt"
   export SSL_KEY="/etc/ssl/certs/client.key"
+  export VAULT_ADDR="http://127.0.0.1:8200"
 
-  docker exec ats-vault vault secrets enable database
+
+  docker exec ats-vault vault secrets enable database -address=$VAULT_ADDR
   docker exec ats-vault vault write database/config/${DB_ALIAS} \
       plugin_name=postgresql-database-plugin \
       allowed_roles="${DB_ALIAS}" \
