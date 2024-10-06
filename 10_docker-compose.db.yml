@@ -7,17 +7,22 @@ services:
       - ats_internal_network
 
   ats-user-db:
-    image: postgres:17
+    build:
+      context: .
+      dockerfile: ./db_conf/user_db/Dockerfile
     container_name: ats-user-db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: user123
-      POSTGRES_DB: userdb
+      POSTGRES_USER: ${USER_DB_VAULT_ID:-user}
+      POSTGRES_PASSWORD: ${USER_DB_VAULT_PW:-user123}
+      POSTGRES_DB: user_db
+      USER_DB_SERVER_CERT_PATH: ${USER_DB_SERVER_CERT_PATH:-./credentials/cert/server/user_db/server.crt}
+      USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH:-./credentials/cert/server/user_db/server.key}
+      USER_DB_CA_CERT_PATH: ${USER_DB_CA_CERT_PATH:-./credentials/cert/ca/user_db/ca.crt}
     ports:
       - "5432:5432"
     volumes:
-      - ${PG_DATA:-./pg_data}:/var/lib/postgresql/data
-      - ${PG_USER_INIT:-./pg_user_init}:/docker-entrypoint-initdb.d
+      - ${PG_DATA:-./storage/pg_data}:/var/lib/postgresql/data
+      - ${PG_USER_INIT:-./db_conf/user_db/init}:/docker-entrypoint-initdb.d
     networks:
       - ats_internal_network
 

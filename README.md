@@ -105,7 +105,7 @@ $ vi ats_start.sh
   export TEST_SERVER_SPRING_LOG_HOME=/home/ats/logs/test-server-spring
   export SESSION_AUTH_SERVER_LOG_HOME=/home/ats/logs/session-auth-server
   
-  # You can add more environment variables here (See 40_docker-compose.yml)
+  # You can add more environment variables here (See 40_docker-compose.latest.yml)
 
   # run docker compose
   docker compose -f 40_docker-compose.yml pull
@@ -113,9 +113,9 @@ $ vi ats_start.sh
   docker compose -f 40_docker-compose.yml up -d
   
   # If you want to use dev image, use the following command
-  # docker compose -f 40_docker-compose.dev.yml pull 
-  # docker compose -f 40_docker-compose.dev.yml build --no-cache
-  # docker compose -f 40_docker-compose.dev.yml up -d
+  # docker compose -f 40_docker-compose.develop.yml pull 
+  # docker compose -f 40_docker-compose.develop.yml build --no-cache
+  # docker compose -f 40_docker-compose.develop.yml up -d
 )
 ```
 

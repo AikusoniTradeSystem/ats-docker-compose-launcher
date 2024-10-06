@@ -1,0 +1,20 @@
+[ req ]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+
+[ req_distinguished_name ]
+CN = ats-vault
+O  = AikusoniTradeSystem
+OU = Security Team
+L  = Pyeongtaek
+ST = Gyeonggido
+C  = KR
+
+[ v3_req ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = ats-vault
+IP.1  = 127.0.0.1
+
