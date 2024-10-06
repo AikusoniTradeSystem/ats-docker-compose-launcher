@@ -1,17 +1,21 @@
 services:
   vault:
-    image: hashicorp/vault:1.17
+    build:
+      context: .
+      dockerfile: ./vault/Dockerfile
+      args:
+        VAULT_SERVER_CERT_PATH: ${VAULT_SERVER_CERT_PATH:-./credentials/certs/server/vault/server.crt}
+        VAULT_SERVER_KEY_PATH: ${VAULT_SERVER_KEY_PATH:-./credentials/certs/server/vault/server.key}
+        VAULT_CA_CERT_PATH: ${VAULT_CA_CERT_PATH:-./credentials/certs/ca/vault/ca.crt}
     container_name: ats-vault
     cap_add:
       - IPC_LOCK
     ports:
       - "${VAULT_PORT:-8200}:8200"
     volumes:
-      - ./vault/config/vault-config.hcl:/vault/config/vault-config.hcl:ro
-      - ${VAULT_DATA_PATH:-./vault/data}:/vault/data
+      - ./vault/config:/vault/config:ro
       - ${VAULT_LOG_PATH:-./logs/vault}:/vault/logs
-      - ${CERT_PATH:-./certs}:/etc/ssl/certs
-    command: "vault server -config=/vault/config/vault-config.hcl"
+      - ats_vault_data:/vault/data
     networks:
       - ats_internal_network
       - ats_vault_network
@@ -21,3 +25,7 @@ networks:
     external: true
   ats_vault_network:
     external: true
+
+volumes:
+  ats_vault_data:
+    external: false

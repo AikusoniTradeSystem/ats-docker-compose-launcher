@@ -1,10 +1,15 @@
 # PostgreSQL 기본 이미지 사용
 FROM postgres:17
 
+# 빌드 시점에 인증서 경로를 외부에서 전달받음
+ARG USER_DB_SERVER_CERT_PATH=./credentials/certs/server/user_db/server.crt
+ARG USER_DB_SERVER_KEY_PATH=./credentials/certs/server/user_db/server.key
+ARG USER_DB_CA_CERT_PATH=./credentials/certs/ca/user_db/ca.crt
+
 # 인증서 파일 복사
-COPY ./certs/vault/server.crt /etc/ssl/certs/server.crt
-COPY ./certs/vault/server.key /etc/ssl/certs/server.key
-COPY ./certs/vault/ca.crt /etc/ssl/certs/ca.crt
+COPY ${USER_DB_SERVER_CERT_PATH} /etc/ssl/certs/server.crt
+COPY ${USER_DB_SERVER_KEY_PATH} /etc/ssl/certs/server.key
+COPY ${USER_DB_CA_CERT_PATH} /etc/ssl/certs/ca.crt
 
 # PostgreSQL에 맞게 인증서 파일 권한 설정
 # PostgreSQL은 개인 키 파일의 권한이 600이어야 함
@@ -13,9 +18,15 @@ RUN chown postgres:postgres /etc/ssl/certs/server.crt /etc/ssl/certs/server.key 
     chmod 644 /etc/ssl/certs/server.crt && \
     chmod 644 /etc/ssl/certs/ca.crt
 
-# 기본 PostgreSQL 설정을 SSL을 사용하도록 명령어 전달
+RUN chown -R postgres:postgres /var/lib/postgresql/data && \
+    chmod -R 700 /var/lib/postgresql/data
+
+# 설정 파일 복사
+COPY ./db_conf/user_db/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf
+
 CMD ["postgres", "-c", "ssl=on", \
      "-c", "ssl_cert_file=/etc/ssl/certs/server.crt", \
      "-c", "ssl_key_file=/etc/ssl/certs/server.key", \
      "-c", "ssl_ca_file=/etc/ssl/certs/ca.crt"]
 
+#CMD ["postgres"]
