@@ -52,6 +52,21 @@ fi
   echo "SSL_SRC_CERT: $SSL_SRC_CERT"
   echo "SSL_SRC_KEY: $SSL_SRC_KEY"
   echo "SSL_DEST_DIR: $SSL_DEST_DIR"
+#  echo "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
+
+  # Perl 설치 여부 확인
+  if ! which perl > /dev/null 2>&1; then
+    echo "Error: Perl is not installed. Please install Perl to continue."
+    exit 1  # 오류 상태로 스크립트 종료
+  fi
+
+  # perl로 URL 인코딩
+  ENCODED_DB_VAULT_ID=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$DB_VAULT_ID")
+  ENCODED_DB_VAULT_PW=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$DB_VAULT_PW")
+
+  # 인코딩된 비밀번호 출력
+  echo "ENCODED_DB_VAULT_ID: $ENCODED_DB_VAULT_ID"
+  echo "ENCODED_DB_VAULT_PW: $ENCODED_DB_VAULT_PW"
 
   # 인증서 파일을 /etc/ssl/certs/client/${DB_NAME} 디렉토리에 복사
   echo "Copying SSL certificates to the Vault container..."
@@ -72,9 +87,9 @@ fi
   docker exec -e VAULT_TOKEN=${VAULT_POLICY_TOKEN} ${VAULT_CONTAINER_NAME} vault write database/config/${DB_ALIAS} \
       plugin_name=postgresql-database-plugin \
       allowed_roles="${DB_ALIAS}" \
-      connection_url="postgresql://${DB_VAULT_ID}:${DB_VAULT_PW}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${SSL_MODE}&sslrootcert=${SSL_DEST_DIR}/ca.crt&sslcert=${SSL_DEST_DIR}/client.crt&sslkey=${SSL_DEST_DIR}/client.key" \
-      username="${DB_VAULT_ID}" \
-      password="${DB_VAULT_PW}"
+      connection_url="postgresql://${ENCODED_DB_VAULT_ID}:${ENCODED_DB_VAULT_PW}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${SSL_MODE}&sslrootcert=${SSL_DEST_DIR}/ca.crt&sslcert=${SSL_DEST_DIR}/client.crt&sslkey=${SSL_DEST_DIR}/client.key" \
+      username="${ENCODED_DB_VAULT_ID}" \
+      password="${ENCODED_DB_VAULT_PW}"
 
   docker exec -e VAULT_TOKEN=${VAULT_POLICY_TOKEN} ${VAULT_CONTAINER_NAME} vault write "database/roles/${DB_ALIAS}" \
       db_name="${DB_NAME}" \
