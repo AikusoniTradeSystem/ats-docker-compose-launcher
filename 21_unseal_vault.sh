@@ -29,15 +29,17 @@
 
   # 정책 파일 적용 (database-policy.hcl)
   docker exec $VAULT_CONTAINER_NAME vault policy write database-policy /vault/config/database-policy.hcl
+  docker exec $VAULT_CONTAINER_NAME vault policy write admin-policy /vault/config/admin-policy.hcl
 
-  # 정책 기반 토큰 생성 (Root Token 대신 사용할 정책 기반 토큰 생성)
-  docker exec $VAULT_CONTAINER_NAME vault token create -policy=database-policy -format=json > ./logs/vault/init/database-policy.json
+  # 정책 기반 토큰 생성 (Root Token 대신 사용할 정책 기반 토큰 생성, orphan 옵션은 루트 토큰이 폐기되어도 토큰이 기능하게 만든다.)
+  docker exec $VAULT_CONTAINER_NAME vault token create -orphan -policy=database-policy -format=json > ./logs/vault/init/database-policy.json
+  docker exec $VAULT_CONTAINER_NAME vault token create -orphan -policy=admin-policy -format=json > ./logs/vault/init/admin-policy.json
 
-  echo "Policy-based token (for database) created. Token stored in ./logs/vault/init/database-policy.json"
+  echo "Policy-based tokens created. Token stored in ./logs/vault/init/*-policy.json"
 
   # Root Token 폐기 (보안 강화)
   docker exec $VAULT_CONTAINER_NAME vault token revoke $ROOT_TOKEN
   echo "Root Token has been revoked for security."
 
-  echo "Vault is now ready to use with a policy-based token."
+  echo "Vault is now ready to use with policy-based tokens."
 )

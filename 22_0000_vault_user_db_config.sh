@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  DB_VAULT_ID="vault_acc"
+  DB_VAULT_ID="vault_access"
   DB_VAULT_PW="LR4SO@?9X#+vth7e"
   DB_ALIAS="ats-user-db"
   DB_NAME="user_db"
