@@ -1,6 +1,6 @@
 # Mount secrets engines
 path "sys/mounts/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
+  capabilities = [ "create", "read", "list" ]
 }
 
 # Configure the database secrets engine and create roles
