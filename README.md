@@ -1,5 +1,5 @@
 # ats-quick-launcher
-한큐에 AikusoniTradeSystem 앱을 배포할 때 사용
+AikusoniTradeSystem를 실행할 때 사용
 
 ### 목록
 - [개요](#개요)
