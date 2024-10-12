@@ -1,41 +1,59 @@
-# System capabilities: Seal/Unseal, List and View Vault status
-path "sys/seal" {
-  capabilities = ["update"]
+# Read system health check
+path "sys/health"
+{
+  capabilities = ["read", "sudo"]
 }
 
-path "sys/unseal" {
-  capabilities = ["update"]
+# Create and manage ACL policies broadly across Vault
+
+# List existing policies
+path "sys/policies/acl"
+{
+  capabilities = ["list"]
 }
 
-path "sys/health" {
+# Create and manage ACL policies
+path "sys/policies/acl/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Enable and manage authentication methods broadly across Vault
+
+# Manage auth methods broadly across Vault
+path "auth/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Create, update, and delete auth methods
+path "sys/auth/*"
+{
+  capabilities = ["create", "update", "delete", "sudo"]
+}
+
+# List auth methods
+path "sys/auth"
+{
   capabilities = ["read"]
 }
 
-path "sys/capabilities-self" {
+# Enable and manage the key/value secrets engine at `secret/` path
+
+# List, create, update, and delete key/value secrets
+path "secret/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Manage secrets engines
+path "sys/mounts/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# List existing secrets engines.
+path "sys/mounts"
+{
   capabilities = ["read"]
-}
-
-# Enable/disable auth methods
-path "auth/*" {
-  capabilities = ["create", "update", "read", "delete", "list"]
-}
-
-# List and manage policies
-path "sys/policies/acl" {
-  capabilities = ["create", "update", "read", "delete", "list"]
-}
-
-# Manage tokens and leases
-path "auth/token/*" {
-  capabilities = ["create", "update", "read", "delete", "list"]
-}
-
-# Manage secret engines
-path "sys/mounts/*" {
-  capabilities = ["create", "update", "read", "delete", "list"]
-}
-
-# Read/write secrets for all paths (optionally restrict to specific paths)
-path "secret/data/*" {
-  capabilities = ["create", "read", "update", "delete", "list"]
 }
