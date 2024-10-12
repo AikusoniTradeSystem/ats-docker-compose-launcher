@@ -24,15 +24,18 @@ fi
 #  echo "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # 정책 내용을 생성하여 파일에 저장
-  POLICY_PATH="./credentials/vault/gen-policies"
-  POLICY_FILE="${POLICY_PATH}/sub-policy-${APP_ROLE_PREFIX}-by-approle.hcl"
-  VAULT_POLICY_PATH="/vault/gen-policies"
+  POLICY_PATH="./credentials/vault/gen-policies/sub/approle"
+  POLICY_FILE="${POLICY_PATH}/${APP_ROLE_PREFIX}-role.hcl"
+  VAULT_POLICY_PATH="/vault/gen-policies/sub/approle"
+  VAULT_POLICY_FILE="${VAULT_POLICY_PATH}/${APP_ROLE_PREFIX}-role.hcl"
+  VAULT_POLICY_NAME="sub/approle/${APP_ROLE_PREFIX}-role"
+  ROLE_NAME="sub-policy-${APP_ROLE_PREFIX}-role"
 
   echo "Creating policy file at: $POLICY_FILE"
 
   mkdir -p $POLICY_PATH
   cat <<EOF > "$POLICY_FILE"
-path "database/creds/sub-policy-${APP_ROLE_PREFIX}-by-approle" {
+path "database/creds/${APP_ROLE_PREFIX}-role" {
   capabilities = ["read"]
 }
 EOF
@@ -45,11 +48,11 @@ EOF
   docker exec $VAULT_CONTAINER_NAME mkdir -p $VAULT_POLICY_PATH
 
   # 정책 파일을 컨테이너 내부로 복사
-  docker cp "$POLICY_FILE" ${VAULT_CONTAINER_NAME}:${VAULT_POLICY_PATH}/
+  docker cp "$POLICY_FILE" ${VAULT_CONTAINER_NAME}:"${VAULT_POLICY_FILE}"
 
   # Vault의 앱롤 설정 활성화
-  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault policy write sub-policy-${APP_ROLE_PREFIX}-by-approle ${VAULT_POLICY_PATH}/sub-policy-${APP_ROLE_PREFIX}-by-approle.hcl
-  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write auth/approle/role/sub-policy-${APP_ROLE_PREFIX}-by-approle token_policies=sub-policy-${APP_ROLE_PREFIX}-by-approle
+  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault policy write "${VAULT_POLICY_NAME}" "${VAULT_POLICY_FILE}"
+  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write "auth/approle/role/${ROLE_NAME}" token_policies="${VAULT_POLICY_NAME}"
 
-  echo "AppRole ${APP_ROLE_PREFIX}-approle configured with policy ${APP_ROLE_PREFIX}-policy at ${VAULT_POLICY_PATH}."
+  echo "AppRole ${ROLE_NAME} (policy : ${VAULT_POLICY_NAME}) has been configured."
 )

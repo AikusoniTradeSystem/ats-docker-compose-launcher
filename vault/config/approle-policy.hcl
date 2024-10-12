@@ -34,6 +34,6 @@ path "auth/approle/login" {
 }
 
 # 하위 정책 생성 가능
-path "sys/policies/acl/sub-policy-*-by-approle" {
+path "sys/policies/acl/sub/approle/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }

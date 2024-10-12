@@ -20,10 +20,13 @@ fi
     esac
   done
 
+  ROLE_NAME="sub-policy-${APP_ROLE_PREFIX}-role"
+
   echo "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
+  echo "ROLE_NAME: $ROLE_NAME"
 #  echo "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # Vault의 앱롤 시크릿 획득
-  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault read auth/approle/role/${APP_ROLE_PREFIX}-approle/role-id
-  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write -f auth/approle/role/${APP_ROLE_PREFIX}-approle/secret-id
+  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault read "auth/approle/role/${ROLE_NAME}/role-id"
+  docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write -f "auth/approle/role/${ROLE_NAME}/secret-id"
 )
