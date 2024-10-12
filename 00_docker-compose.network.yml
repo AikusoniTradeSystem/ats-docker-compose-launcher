@@ -12,7 +12,7 @@ services:
 networks:
   ats_internal_network:
     driver: bridge
-    internal: true
+    internal: ${INTERNAL_NETWORK_INTERNAL:-true}
     name: ats_internal_network
   ats_vault_network:
     driver: bridge

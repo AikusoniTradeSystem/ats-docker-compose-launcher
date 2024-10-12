@@ -87,9 +87,9 @@ fi
   docker exec -e VAULT_TOKEN=${VAULT_POLICY_TOKEN} ${VAULT_CONTAINER_NAME} vault write database/config/${DB_ALIAS} \
       plugin_name=postgresql-database-plugin \
       allowed_roles="${DB_ALIAS}" \
-      connection_url="postgresql://${ENCODED_DB_VAULT_ID}:${ENCODED_DB_VAULT_PW}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${SSL_MODE}&sslrootcert=${SSL_DEST_DIR}/ca.crt&sslcert=${SSL_DEST_DIR}/client.crt&sslkey=${SSL_DEST_DIR}/client.key" \
-      username="${ENCODED_DB_VAULT_ID}" \
-      password="${ENCODED_DB_VAULT_PW}"
+      connection_url="postgresql://{{username}}:{{password}}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${SSL_MODE}&sslrootcert=${SSL_DEST_DIR}/ca.crt&sslcert=${SSL_DEST_DIR}/client.crt&sslkey=${SSL_DEST_DIR}/client.key" \
+      username="${DB_VAULT_ID}" \
+      password="${DB_VAULT_PW}"
 
   docker exec -e VAULT_TOKEN=${VAULT_POLICY_TOKEN} ${VAULT_CONTAINER_NAME} vault write "database/roles/${DB_ALIAS}" \
       db_name="${DB_NAME}" \

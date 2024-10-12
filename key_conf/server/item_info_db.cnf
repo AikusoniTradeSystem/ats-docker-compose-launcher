@@ -12,6 +12,8 @@ ST = Gyeonggido
 C  = KR
 
 [ v3_req ]
+basicConstraints = critical, CA:TRUE
+keyUsage = critical, keyCertSign, cRLSign
 subjectAltName = @alt_names
 
 [ alt_names ]
