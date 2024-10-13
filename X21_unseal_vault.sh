@@ -1,19 +1,40 @@
 #!/bin/bash
 
 (
+  # 도움말 함수
+  show_help() {
+      echo "Usage: $0 [options]"
+      echo ""
+      echo "Options:"
+      echo "  --key=VALUE         Provide an unseal key (can be used multiple times)"
+      echo "  --unseal_key=VALUE  Provide an unseal key (can be used multiple times)"
+      echo "  --k=VALUE           Provide an unseal key (can be used multiple times)"
+      echo "  --uk=VALUE          Provide an unseal key (can be used multiple times)"
+      echo "  --help              Show this help message and exit"
+      echo ""
+      echo "Example:"
+      echo "  $0 --key=XSqlmDCUlp9 --unseal_key=Xsej23k8 --k=KSkD93js --uk=Aik178s13"
+      exit 0
+  }
+
   # Unseal 키를 저장할 배열
   UNSEAL_KEYS=()
 
-  # 명령줄 인수로 unseal 키들을 받기
+  # 명령줄 인수로 다양한 형태의 unseal 키들을 받기
   while [[ "$#" -gt 0 ]]; do
       case $1 in
-          --unseal_key_*)
-              # unseal_key_N에서 N을 추출하여 배열에 저장
+          --key=*|--unseal_key=*|--k=*|--uk=*)
+              # 다양한 형식의 키에서 VALUE 부분을 추출하여 배열에 저장
               UNSEAL_KEYS+=("${1#*=}")
               shift
               ;;
+          --help)
+              show_help
+              exit 0
+              ;;
           *)
               echo "Unknown option: $1" >&2
+              show_help
               exit 1
               ;;
       esac
