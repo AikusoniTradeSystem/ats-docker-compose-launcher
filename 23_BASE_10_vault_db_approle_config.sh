@@ -8,18 +8,21 @@ fi
 (
   VAULT_CONTAINER_NAME="ats-vault"
 
+  DB_ALIAS=""
   APP_ROLE_PREFIX=""
   VAULT_POLICY_TOKEN=""
 
   # 명령행 인자를 처리하는 while 루프
   while [[ "$#" -gt 0 ]]; do
     case $1 in
+      --db_alias=*) DB_ALIAS="${1#*=}"; shift ;;
       --app_role_prefix=*) APP_ROLE_PREFIX="${1#*=}"; shift ;;
       --vault_policy_token=*) VAULT_POLICY_TOKEN="${1#*=}"; shift ;;
       *) echo "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
 
+  echo "DB_ALIAS: $DB_ALIAS"
   echo "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
 #  echo "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
@@ -39,7 +42,7 @@ path "auth/approle/login" {
   capabilities = ["create", "read", "update"]
 }
 
-path "database/creds/${APP_ROLE_PREFIX}-role" {
+path "database/creds/${DB_ALIAS}" {
   capabilities = ["read"]
 }
 EOF

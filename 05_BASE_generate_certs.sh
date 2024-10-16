@@ -19,7 +19,7 @@ fi
   done
 
   echo "SERVER_NAME: $DB_VAULT_ID"
-  echo "CERT_PATH: CERT_PATH"
+  echo "CERT_PATH: $CERT_PATH"
 
   SERVER_CERT_PATH="${CERT_PATH}/server/${SERVER_NAME}"
   CLIENT_CERT_PATH="${CERT_PATH}/client/${SERVER_NAME}"

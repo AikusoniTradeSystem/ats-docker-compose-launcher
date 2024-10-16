@@ -42,6 +42,7 @@
   APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/approle-policy.json)
 
   ./23_BASE_10_vault_db_approle_config.sh \
+    --db_alias="$DB_ALIAS" \
     --app_role_prefix="$APP_ROLE_PREFIX" \
     --vault_policy_token="$APP_ROLE_VAULT_POLICY_TOKEN"
 )
