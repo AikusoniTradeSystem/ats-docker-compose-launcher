@@ -35,6 +35,10 @@ fi
 
   mkdir -p $POLICY_PATH
   cat <<EOF > "$POLICY_FILE"
+path "auth/approle/login" {
+  capabilities = ["create", "read", "update"]
+}
+
 path "database/creds/${APP_ROLE_PREFIX}-role" {
   capabilities = ["read"]
 }
