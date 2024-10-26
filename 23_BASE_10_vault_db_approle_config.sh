@@ -1,13 +1,11 @@
 #!/bin/bash
 
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
-  echo "Error: This script must be executed from another shell script."
+  echo -e "Error: This script must be executed from another shell script."
   exit 1
 fi
 
 (
-  VAULT_CONTAINER_NAME="ats-vault"
-
   DB_ALIAS=""
   APP_ROLE_PREFIX=""
   VAULT_POLICY_TOKEN=""
@@ -18,13 +16,13 @@ fi
       --db_alias=*) DB_ALIAS="${1#*=}"; shift ;;
       --app_role_prefix=*) APP_ROLE_PREFIX="${1#*=}"; shift ;;
       --vault_policy_token=*) VAULT_POLICY_TOKEN="${1#*=}"; shift ;;
-      *) echo "Unknown option: $1" >&2; exit 1 ;;
+      *) echo -e "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
 
-  echo "DB_ALIAS: $DB_ALIAS"
-  echo "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
-#  echo "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
+  echo -e "DB_ALIAS: $DB_ALIAS"
+  echo -e "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
+#  echo -e "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # 정책 내용을 생성하여 파일에 저장
   POLICY_PATH="./credentials/vault/gen-policies/sub/approle"
@@ -34,7 +32,7 @@ fi
   VAULT_POLICY_NAME="sub/approle/${APP_ROLE_PREFIX}-role"
   ROLE_NAME="sub-policy-${APP_ROLE_PREFIX}-role"
 
-  echo "Creating policy file at: $POLICY_FILE"
+  echo -e "Creating policy file at: $POLICY_FILE"
 
   mkdir -p $POLICY_PATH
   cat <<EOF > "$POLICY_FILE"
@@ -49,7 +47,7 @@ EOF
 
   chmod +r $POLICY_FILE
 
-  echo "Policy file created at: $POLICY_FILE"
+  echo -e "Policy file created at: $POLICY_FILE"
 
   # 컨테이너 내부에 정책 파일을 저장할 폴더 생성
   docker exec $VAULT_CONTAINER_NAME mkdir -p $VAULT_POLICY_PATH
@@ -61,5 +59,5 @@ EOF
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault policy write "${VAULT_POLICY_NAME}" "${VAULT_POLICY_FILE}"
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write "auth/approle/role/${ROLE_NAME}" token_policies="${VAULT_POLICY_NAME}"
 
-  echo "AppRole ${ROLE_NAME} (policy : ${VAULT_POLICY_NAME}) has been configured."
+  echo -e "AppRole ${ROLE_NAME} (policy : ${VAULT_POLICY_NAME}) has been configured."
 )

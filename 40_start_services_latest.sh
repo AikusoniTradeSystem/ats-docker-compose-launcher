@@ -1,6 +1,8 @@
 #!/bin/bash
 
 (
+  source common.sh
+
   # host environment variables
   export NGINX_LOG_HOME=./logs/nginx
   export TEST_SERVER_SPRING_LOG_HOME=./logs/test-server-spring

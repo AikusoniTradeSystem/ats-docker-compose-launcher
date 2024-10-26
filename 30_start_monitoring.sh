@@ -1,6 +1,8 @@
 #!/bin/bash
 
 (
+    source common.sh
+
     # determine the architecture to build cadvisor image
     ARCH=$(uname -m)
     case "$ARCH" in
@@ -11,7 +13,7 @@
         GOARCH="arm64"
         ;;
       *)
-        echo "Unknown server architecture: $ARCH"
+        echo -e "Unknown server architecture: $ARCH"
         exit 1
         ;;
     esac

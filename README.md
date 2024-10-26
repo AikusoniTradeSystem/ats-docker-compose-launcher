@@ -12,6 +12,7 @@ AikusoniTradeSystem 앱을 도커를 사용해 배포할 때 사용
 - 관련 서비스를 종료하는 스크립트는 D로 시작합니다. (예: D00_stop_network.sh)
 - D99_stop_all.sh 스크립트를 실행하면 모든 서비스를 종료합니다.
 - 기타 스크립트는 X로 시작합니다. (예: X21_seal_vault.sh, X21_unseal_vault.sh)
+- 각 스크립트는 common.sh를 통해 환경변수를 로딩하며, common.sh는 sample_configs 폴더 내의 .envconfig 파일을 로딩합니다.
 
 ### 서비스 실행 스크립트 실행 순서
 ```bash
@@ -20,9 +21,9 @@ AikusoniTradeSystem 앱을 도커를 사용해 배포할 때 사용
 
 # 05. 인증서 생성
 # 05_0000. 볼트 서버 인증서와 접속용 클라이언트 인증서 생성
-./05_0000_generate_vault_certs.sh
+./05_0000_generate_vault_crypto.sh
 # 05_0010. user db 서버 인증서와 접속용 클라이언트 인증서 생성
-./05_0010_generate_user_db_certs.sh
+./05_0010_generate_user_db_crypto.sh
 
 # 10. 데이터베이스 실행
 ./10_start_db.sh

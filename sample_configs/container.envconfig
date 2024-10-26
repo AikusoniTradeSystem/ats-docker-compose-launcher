@@ -1,0 +1,8 @@
+###
+# Container Configurations
+# warning: Trailing comments are not allowed.
+###
+
+# 컨테이너 이름
+VAULT_CONTAINER_NAME="ats-vault"
+USER_DB_CONTAINER_NAME="ats-user-db"

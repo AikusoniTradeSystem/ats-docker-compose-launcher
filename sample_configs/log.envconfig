@@ -1,0 +1,9 @@
+###
+# Log Configurations
+# warning: Trailing comments are not allowed.
+###
+
+LOG_ROOT_PATH="./logs"
+
+VAULT_LOG_PATH="${LOG_ROOT_PATH}/vault"
+USER_DB_LOG_PATH="${LOG_ROOT_PATH}/user_db"

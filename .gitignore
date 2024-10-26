@@ -3,6 +3,7 @@ storage/*
 certs/*
 pg_data/*
 credentials/*
+config_trace/*
 
 !logs/
 !storage/

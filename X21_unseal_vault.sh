@@ -1,19 +1,21 @@
 #!/bin/bash
 
 (
+  source common.sh
+
   # 도움말 함수
   show_help() {
-      echo "Usage: $0 [options]"
-      echo ""
-      echo "Options:"
-      echo "  --key=VALUE         Provide an unseal key (can be used multiple times)"
-      echo "  --unseal_key=VALUE  Provide an unseal key (can be used multiple times)"
-      echo "  --k=VALUE           Provide an unseal key (can be used multiple times)"
-      echo "  --uk=VALUE          Provide an unseal key (can be used multiple times)"
-      echo "  --help              Show this help message and exit"
-      echo ""
-      echo "Example:"
-      echo "  $0 --key=XSqlmDCUlp9 --unseal_key=Xsej23k8 --k=KSkD93js --uk=Aik178s13"
+      echo -e "Usage: $0 [options]"
+      echo -e ""
+      echo -e "Options:"
+      echo -e "  --key=VALUE         Provide an unseal key (can be used multiple times)"
+      echo -e "  --unseal_key=VALUE  Provide an unseal key (can be used multiple times)"
+      echo -e "  --k=VALUE           Provide an unseal key (can be used multiple times)"
+      echo -e "  --uk=VALUE          Provide an unseal key (can be used multiple times)"
+      echo -e "  --help              Show this help message and exit"
+      echo -e ""
+      echo -e "Example:"
+      echo -e "  $0 --key=XSqlmDCUlp9 --unseal_key=Xsej23k8 --k=KSkD93js --uk=Aik178s13"
       exit 0
   }
 
@@ -33,7 +35,7 @@
               exit 0
               ;;
           *)
-              echo "Unknown option: $1" >&2
+              echo -e "Unknown option: $1" >&2
               show_help
               exit 1
               ;;
@@ -42,7 +44,7 @@
 
   # Unseal 키가 제공되지 않았으면 오류 출력
   if [ ${#UNSEAL_KEYS[@]} -eq 0 ]; then
-      echo "Error: No unseal keys provided."
+      echo -e "Error: No unseal keys provided."
       exit 1
   fi
 
@@ -53,7 +55,7 @@
 
   # Vault가 잠겨있는지 확인
   if [ "$(check_vault_status)" == "true" ]; then
-    echo "Vault is sealed. Unsealing..."
+    echo -e "Vault is sealed. Unsealing..."
 
     # Unseal 키 배열을 순차적으로 사용하여 Vault를 unseal
     for key in "${UNSEAL_KEYS[@]}"
@@ -61,13 +63,13 @@
       docker exec ats-vault vault operator unseal "$key"
       # Vault가 unseal 되었는지 다시 확인
       if [ "$(check_vault_status)" == "false" ]; then
-        echo "Vault unsealed successfully."
+        echo -e "Vault unsealed successfully."
         exit 0
       fi
     done
 
-    echo "Vault is still sealed after providing unseal keys."
+    echo -e "Vault is still sealed after providing unseal keys."
   else
-    echo "Vault is already unsealed."
+    echo -e "Vault is already unsealed."
   fi
 )

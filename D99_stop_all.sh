@@ -1,5 +1,8 @@
 #!/bin/bash
+
 (
+  source common.sh
+
   docker compose -f 40_docker-compose.develop.yml down -v
   docker compose -f 40_docker-compose.latest.yml down -v
   docker compose -f 30_docker-compose.monitoring.yml down -v

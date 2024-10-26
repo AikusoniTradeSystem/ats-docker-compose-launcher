@@ -1,14 +1,14 @@
 FROM hashicorp/vault:1.17
 
 # 빌드 시점에 인증서 경로를 외부에서 전달받음
-ARG VAULT_SERVER_CERT_PATH=./credentials/certs/server/vault/server.crt
-ARG VAULT_SERVER_KEY_PATH=./credentials/certs/server/vault/server.key
-ARG VAULT_CA_CERT_PATH=./credentials/certs/ca/vault/ca.crt
+ARG VAULT_SERVER_CRT_PATH=./credentials/crypto/server/vault/server.crt
+ARG VAULT_SERVER_KEY_PATH=./credentials/crypto/server/vault/server.key
+ARG VAULT_CA_PATH=./credentials/crypto/ca/vault/ca.crt
 
 # 인증서 파일 복사
-COPY ${VAULT_SERVER_CERT_PATH} /etc/ssl/certs/server.crt
+COPY ${VAULT_SERVER_CRT_PATH} /etc/ssl/certs/server.crt
 COPY ${VAULT_SERVER_KEY_PATH} /etc/ssl/private/server.key
-COPY ${VAULT_CA_CERT_PATH} /etc/ssl/certs/ca.crt
+COPY ${VAULT_CA_PATH} /etc/ssl/certs/ca.crt
 
 # vault 계정이 인증서 파일에 접근할 수 있도록 권한 설정
 RUN chown vault:vault /etc/ssl/certs/server.crt /etc/ssl/private/server.key /etc/ssl/certs/ca.crt && \

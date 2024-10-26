@@ -1,0 +1,13 @@
+###
+# Database Configurations
+# warning: Trailing comments are not allowed.
+###
+
+PG_DATA=./storage/pg_data
+
+# Vault를 위한 User Db 접속 설정
+USER_DB_VAULT_ID="vault_access"
+USER_DB_VAULT_PW="LR4SO@?9X#+vth7e"
+
+USER_DB_PG_DATA="${PG_DATA}/user_db"
+USER_DB_PG_INIT="./db_conf/user_db/init"

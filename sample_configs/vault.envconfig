@@ -1,0 +1,11 @@
+###
+# Vault Configurations
+# warning: Trailing comments are not allowed.
+###
+
+VAULT_CREDENTIAL_INIT_PATH="./credentials/vault/init"
+
+VAULT_KEY_SHARES=10
+VAULT_KEY_THRESHOLD=3
+
+USER_DB_APPROLE_ALIAS="ats-user-db"

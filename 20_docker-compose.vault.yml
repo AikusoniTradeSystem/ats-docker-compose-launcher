@@ -4,10 +4,10 @@ services:
       context: .
       dockerfile: ./vault/Dockerfile
       args:
-        VAULT_SERVER_CERT_PATH: ${VAULT_SERVER_CERT_PATH:-./credentials/certs/server/vault/server.crt}
-        VAULT_SERVER_KEY_PATH: ${VAULT_SERVER_KEY_PATH:-./credentials/certs/server/vault/server.key}
-        VAULT_CA_CERT_PATH: ${VAULT_CA_CERT_PATH:-./credentials/certs/ca/vault/ca.crt}
-    container_name: ats-vault
+        VAULT_SERVER_CRT_PATH: ${VAULT_SERVER_CRT_PATH:-./credentials/crypto/server/vault/server.crt}
+        VAULT_SERVER_KEY_PATH: ${VAULT_SERVER_KEY_PATH:-./credentials/crypto/server/vault/server.key}
+        VAULT_CA_PATH: ${VAULT_CA_PATH:-./credentials/crypto/ca/vault/ca.crt}
+    container_name: ${VAULT_CONTAINER_NAME:-ats-vault}
     cap_add:
       - IPC_LOCK
     ports:

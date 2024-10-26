@@ -12,15 +12,15 @@ services:
 networks:
   ats_internal_network:
     driver: bridge
-    internal: ${INTERNAL_NETWORK_INTERNAL:-true}
+    internal: ${INTERNAL_NETWORK_IS_INTERNAL:-true}
     name: ats_internal_network
   ats_vault_network:
     driver: bridge
-    internal: ${VAULT_NETWORK_INTERNAL:-true}
+    internal: ${VAULT_NETWORK_IS_INTERNAL:-true}
     name: ats_vault_network
   ats_monitoring_network:
     driver: bridge
-    internal: ${MONITORING_NETWORK_INTERNAL:-false}
+    internal: ${MONITORING_NETWORK_IS_INTERNAL:-false}
     name: ats_monitoring_network
   ats_external_network:
     driver: bridge

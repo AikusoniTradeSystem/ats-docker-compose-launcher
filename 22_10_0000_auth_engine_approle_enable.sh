@@ -1,9 +1,11 @@
 #!/bin/bash
 
 (
+  source common.sh
+
   ENGINE_TYPE="auth"
   ENGINE_NAME="approle"
-  VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/admin-policy.json)
+  VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/admin-policy.json")
 
   ./22_BASE_00_enable_engine.sh \
     --engine_type="$ENGINE_TYPE" \

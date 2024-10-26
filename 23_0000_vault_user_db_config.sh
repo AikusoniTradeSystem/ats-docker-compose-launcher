@@ -1,18 +1,20 @@
 #!/bin/bash
 
 (
-  DB_VAULT_ID="vault_access"
-  DB_VAULT_PW="LR4SO@?9X#+vth7e"
-  DB_ALIAS="ats-user-db"
-  DB_NAME="user_db"
-  DB_HOST="ats-user-db"
-  DB_PORT="5432"
+  source common.sh
+
+  DB_VAULT_ID="${USER_DB_VAULT_ID}"
+  DB_VAULT_PW="${USER_DB_VAULT_PW}"
+  DB_ALIAS="${USER_DB_APPROLE_ALIAS}"
+  DB_NAME="${USER_DB_SERVICE_NAME}"
+  DB_HOST="${USER_DB_HOST_NAME}"
+  DB_PORT="${USER_DB_PORT}"
 
   SSL_MODE="verify-full"
-  SSL_SRC_ROOTCERT="./credentials/certs/ca/${DB_NAME}/ca.crt"
-  SSL_SRC_CERT="./credentials/certs/client/${DB_NAME}/client.crt"
-  SSL_SRC_KEY="./credentials/certs/client/${DB_NAME}/client.key"
-  DB_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/database-policy.json)
+  SSL_SRC_ROOTCERT="${USER_DB_CA_CRYPTO_PATH}/ca_self.crt"
+  SSL_SRC_CERT="${USER_DB_CLIENT_CRYPTO_PATH}/client.crt"
+  SSL_SRC_KEY="${USER_DB_CLIENT_CRYPTO_PATH}/client.key"
+  DB_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/database-policy.json")
 
   ./23_BASE_00_vault_db_config.sh \
     --db_vault_id="$DB_VAULT_ID" \
@@ -30,16 +32,16 @@
   EXIT_CODE=$?
 
   # exit 코드 출력
-  echo "The exit code of 23_BASE_00_vault_db_config.sh is: $EXIT_CODE"
+  echo -e "The exit code of 23_BASE_00_vault_db_config.sh is: $EXIT_CODE"
 
   # exit 코드에 따른 작업
   if [ $EXIT_CODE -ne 0 ]; then
-    echo "23_BASE_00_vault_db_config.sh script failed with exit code $EXIT_CODE."
+    echo -e "23_BASE_00_vault_db_config.sh script failed with exit code $EXIT_CODE."
     exit 1
   fi
 
-  APP_ROLE_PREFIX="${DB_ALIAS}"
-  APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/approle-policy.json)
+  APP_ROLE_PREFIX="${USER_DB_APPROLE_ALIAS}"
+  APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/approle-policy.json")
 
   ./23_BASE_10_vault_db_approle_config.sh \
     --db_alias="$DB_ALIAS" \
