@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   # host environment variables
   export NGINX_LOG_HOME=./logs/nginx

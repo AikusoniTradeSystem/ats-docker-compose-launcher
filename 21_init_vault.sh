@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   # Vault가 이미 초기화되었는지 확인
   docker exec "$VAULT_CONTAINER_NAME" vault status | grep "Initialized" | grep "true" && exit 0

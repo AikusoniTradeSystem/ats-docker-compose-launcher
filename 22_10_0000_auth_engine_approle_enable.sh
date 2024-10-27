@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   ENGINE_TYPE="auth"
   ENGINE_NAME="approle"

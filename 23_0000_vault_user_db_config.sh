@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   DB_VAULT_ID="${USER_DB_VAULT_ID}"
   DB_VAULT_PW="${USER_DB_VAULT_PW}"

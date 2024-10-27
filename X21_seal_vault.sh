@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   echo -e "Are you sure you want to seal the Vault container: $VAULT_CONTAINER_NAME? (y/n)"
   read -r CONFIRMATION

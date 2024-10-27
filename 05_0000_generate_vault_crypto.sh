@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   SERVICE_NAME="${VAULT_SERVICE_NAME}"
   SERVER_CRYPTO_PATH="${VAULT_SERVER_CRYPTO_PATH}"

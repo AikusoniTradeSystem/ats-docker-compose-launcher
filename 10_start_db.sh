@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   export USER_DB_SERVER_CRT_PATH="${USER_DB_SERVER_CRYPTO_PATH}/server_self.crt"
   export USER_DB_SERVER_KEY_PATH="${USER_DB_SERVER_CRYPTO_PATH}/server.key"

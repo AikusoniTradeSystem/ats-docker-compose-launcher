@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-    source common.sh
+    source load_env.sh
 
     # determine the architecture to build cadvisor image
     ARCH=$(uname -m)

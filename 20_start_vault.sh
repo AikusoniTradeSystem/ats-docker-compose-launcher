@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   export VAULT_SERVER_CRT_PATH="${VAULT_SERVER_CRYPTO_PATH}/server.crt"
   export VAULT_SERVER_KEY_PATH="${VAULT_SERVER_CRYPTO_PATH}/server.key"

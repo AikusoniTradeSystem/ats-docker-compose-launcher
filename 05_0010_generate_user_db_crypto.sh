@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   SERVICE_NAME="${USER_DB_SERVICE_NAME}"
   SERVER_CRYPTO_PATH="${USER_DB_SERVER_CRYPTO_PATH}"
