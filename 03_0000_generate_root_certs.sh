@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load configuration file
-source common.sh
+source load_env.sh
 
 # Create directories if they don't exist
 mkdir -p "${ROOT_PRIVATE_KEY_CRYPTO_PATH}"

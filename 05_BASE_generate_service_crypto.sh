@@ -13,6 +13,7 @@ fi
   CA_CRYPTO_OUTPUT_PATH=""
   SERVER_KEY_CNF_FILE_PATH=""
   SIGNING_SCRIPT_PATH=""
+  EXTENSIONS="v3_req"
 
   # 명령행 인자를 처리하는 while 루프
   while [[ "$#" -gt 0 ]]; do
@@ -56,13 +57,17 @@ fi
   # 서명 스크립트 호출
   if [ -n "$SIGNING_SCRIPT_PATH" ] && [ -f "$SIGNING_SCRIPT_PATH" ]; then
     echo -e "${SHELL_TEXT_INFO}Submitting CSR to signing script: $SIGNING_SCRIPT_PATH${SHELL_TEXT_RESET}"
-    bash "$SIGNING_SCRIPT_PATH" "${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt"
+    if [ -f "$SERVER_KEY_CNF_FILE_PATH" ]; then
+      bash "$SIGNING_SCRIPT_PATH" --csr="${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" --output="${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" --conf="$SERVER_KEY_CNF_FILE_PATH" --extensions="$EXTENSIONS"
+    else
+      bash "$SIGNING_SCRIPT_PATH" --csr="${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" --output="${SERVER_CRYPTO_OUTPUT_PATH}/server.crt"
+    fi
   else
     echo -e "${SHELL_TEXT_WARNING}Signing script not found or not specified. Proceeding with self-signing...${SHELL_TEXT_RESET}"
   fi
 
   echo -e "${SHELL_TEXT_INFO}Self-signing the server certificate for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-  openssl x509 -req -in "${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" -signkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -days 365
+  openssl x509 -req -in "${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" -signkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -days 365 --extfile "$SERVER_KEY_CNF_FILE_PATH" -extensions "$EXTENSIONS"
 
   echo -e "$SUB_HBAR"
   echo -e "${SHELL_TEXT_INFO}Generating client key and certificate for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"

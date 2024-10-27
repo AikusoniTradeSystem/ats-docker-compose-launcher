@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   docker compose -f 00_docker-compose.network.yml pull
   docker compose -f 00_docker-compose.network.yml build --no-cache

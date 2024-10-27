@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   APP_ROLE_ALIAS="${USER_DB_APPROLE_ALIAS}"
   APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/approle-policy.json)

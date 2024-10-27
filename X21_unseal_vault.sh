@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
-  source common.sh
+  source load_env.sh
 
   # 도움말 함수
   show_help() {
