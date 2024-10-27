@@ -4,12 +4,12 @@ FROM postgres:17
 # 빌드 시점에 인증서 경로를 외부에서 전달받음
 ARG USER_DB_SERVER_CRT_PATH=./credentials/crypto/server/user_db/server.crt
 ARG USER_DB_SERVER_KEY_PATH=./credentials/crypto/server/user_db/server.key
-ARG USER_DB_CA_PATH=./credentials/crypto/ca/user_db/ca.crt
+ARG USER_DB_SERVER_SELF_CA_PATH=./credentials/crypto/server/user_db/server_self.crt
 
 # 인증서 파일 복사
 COPY ${USER_DB_SERVER_CRT_PATH} /etc/ssl/certs/server.crt
 COPY ${USER_DB_SERVER_KEY_PATH} /etc/ssl/certs/server.key
-COPY ${USER_DB_CA_PATH} /etc/ssl/certs/ca.crt
+COPY ${USER_DB_SERVER_SELF_CA_PATH} /etc/ssl/certs/ca.crt
 
 # PostgreSQL에 맞게 인증서 파일 권한 설정
 # PostgreSQL은 개인 키 파일의 권한이 600이어야 함

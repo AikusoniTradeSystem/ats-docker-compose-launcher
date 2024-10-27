@@ -6,6 +6,8 @@ if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
 fi
 
 (
+  source load_function.sh
+
   DB_VAULT_ID=""
   DB_VAULT_PW=""
   DB_ALIAS=""
@@ -55,16 +57,24 @@ fi
   # 인증서 파일을 /etc/ssl/certs/client/${DB_NAME} 디렉토리에 복사
   echo -e "Copying SSL certificates to the Vault container..."
   docker exec ${VAULT_CONTAINER_NAME} mkdir -p ${SSL_DEST_DIR}
+  assertResult "Failed to create directory for SSL certificates."
   docker cp "$SSL_SRC_ROOTCERT" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/ca.crt
+  assertResult "Failed to copy root certificate."
   docker cp "$SSL_SRC_CERT" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/client.crt
+  assertResult "Failed to copy client certificate."
   docker cp "$SSL_SRC_KEY" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/client.key
+  assertResult "Failed to copy client key."
 
   # 복사한 파일의 권한 설정 (Vault가 접근할 수 있도록)
   echo -e "Setting ownership and permissions for SSL certificates..."
   docker exec ${VAULT_CONTAINER_NAME} chown vault:vault ${SSL_DEST_DIR}/ca.crt ${SSL_DEST_DIR}/client.crt ${SSL_DEST_DIR}/client.key
+  assertResult "Failed to change ownership of SSL certificates."
   docker exec ${VAULT_CONTAINER_NAME} chmod 600 ${SSL_DEST_DIR}/client.key
+  assertResult "Failed to change permissions of SSL certificates."
   docker exec ${VAULT_CONTAINER_NAME} chmod 600 ${SSL_DEST_DIR}/ca.crt
+  assertResult "Failed to change permissions of SSL certificates."
   docker exec ${VAULT_CONTAINER_NAME} chmod 600 ${SSL_DEST_DIR}/client.crt
+  assertResult "Failed to change permissions of SSL certificates."
 
   # Vault에 데이터베이스 연결 설정
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write database/config/${DB_ALIAS} \
@@ -73,10 +83,12 @@ fi
       connection_url="postgresql://{{username}}:{{password}}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${SSL_MODE}&sslrootcert=${SSL_DEST_DIR}/ca.crt&sslcert=${SSL_DEST_DIR}/client.crt&sslkey=${SSL_DEST_DIR}/client.key" \
       username="${DB_VAULT_ID}" \
       password="${DB_VAULT_PW}"
+  assertResult "Failed to configure database connection."
 
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write "database/roles/${DB_ALIAS}" \
       db_name="${DB_NAME}" \
       creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT, DELETE, UPDATE, INSERT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
       default_ttl="1h" \
       max_ttl="24h"
+  assertResult "Failed to configure database role."
 )

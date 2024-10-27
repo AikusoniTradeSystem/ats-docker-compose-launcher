@@ -13,7 +13,7 @@ services:
       args:
         USER_DB_SERVER_CRT_PATH: ${USER_DB_SERVER_CRT_PATH}
         USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH}
-        USER_DB_CA_PATH: ${USER_DB_CA_PATH}
+        USER_DB_SERVER_SELF_CA_PATH: ${USER_DB_SERVER_SELF_CA_PATH}
     container_name: ${USER_DB_CONTAINER_NAME:-ats-user-db}
     environment:
       POSTGRES_USER: ${USER_DB_VAULT_ID:-user}
@@ -21,7 +21,7 @@ services:
       POSTGRES_DB: user_db
       USER_DB_SERVER_CRT_PATH: ${USER_DB_SERVER_CRT_PATH:-./credentials/crypto/server/user_db/server.crt}
       USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH:-./credentials/crypto/server/user_db/server.key}
-      USER_DB_CA_PATH: ${USER_DB_CA_PATH:-./credentials/crypto/ca/user_db/ca.crt}
+      USER_DB_SERVER_SELF_CA_PATH: ${USER_DB_SERVER_SELF_CA_PATH:-./credentials/crypto/client/user_db/client.crt}
     ports:
       - "${USER_DB_PORT:-5432}:5432"
     volumes:
