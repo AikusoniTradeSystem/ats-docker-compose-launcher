@@ -4,6 +4,7 @@ FROM hashicorp/vault:1.17
 ARG VAULT_SERVER_CRT_PATH=./credentials/crypto/server/vault/server.crt
 ARG VAULT_SERVER_KEY_PATH=./credentials/crypto/server/vault/server.key
 ARG VAULT_CA_PATH=./credentials/crypto/ca/vault/ca.crt
+ARG ENTRYPOINT_PATH=./vault/entrypoint.sh
 
 # 인증서 파일 복사
 COPY ${VAULT_SERVER_CRT_PATH} /etc/ssl/certs/server.crt
@@ -17,7 +18,7 @@ RUN chown vault:vault /etc/ssl/certs/server.crt /etc/ssl/private/server.key /etc
     chmod 644 /etc/ssl/certs/ca.crt
 
 # entrypoint.sh 파일을 컨테이너에 복사하고 실행 권한 부여
-COPY ./vault/entrypoint.sh /entrypoint.sh
+COPY ${ENTRYPOINT_PATH} /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 실행 시점에 소유자 변경 후 Vault 서버 시작
