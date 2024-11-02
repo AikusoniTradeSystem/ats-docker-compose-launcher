@@ -1,6 +1,7 @@
 services:
   session-cluster-redis:
     image: redis:latest
+    restart: unless-stopped
     container_name: session-cluster-redis
     command: [ "redis-server", "--port", "6379" ]
     networks:
@@ -15,6 +16,7 @@ services:
         USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH}
         USER_DB_SERVER_SELF_CA_PATH: ${USER_DB_SERVER_SELF_CA_PATH}
     container_name: ${USER_DB_CONTAINER_NAME:-ats-user-db}
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${USER_DB_VAULT_ID:-user}
       POSTGRES_PASSWORD: ${USER_DB_VAULT_PW:-user123}

@@ -2,6 +2,7 @@ services:
   ats-test-server-spring:
     image: aikusoni/ats-test-server-spring:develop
     container_name: ats-test-server-spring
+    restart: unless-stopped
     volumes:
       - ${TEST_SERVER_SPRING_LOG_HOME:-./logs/test}:/logs
     environment:
@@ -14,6 +15,8 @@ services:
 
   ats-session-auth-server:
     image: aikusoni/ats-session-auth-server:develop
+    container_name: ats-session-auth-server
+    restart: unless-stopped
     volumes:
       - ${SESSION_AUTH_SERVER_LOG_HOME:-./logs/session}:/logs
     environment:
@@ -40,6 +43,7 @@ services:
   ats-landing:
     image: aikusoni/ats-landing:develop
     container_name: ats-landing
+    restart: unless-stopped
     volumes:
       - frontend_landing_volume:/upload_target
     command: [ "/bin/sh", "-c", "cp -r /dist/* /upload_target/" ]
@@ -49,6 +53,7 @@ services:
       context: ./nginx
       dockerfile: Dockerfile
     container_name: nginx
+    restart: unless-stopped
     ports:
       - "8080:8080"
       - "8001:8001"

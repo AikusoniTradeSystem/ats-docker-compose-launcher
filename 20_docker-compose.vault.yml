@@ -8,6 +8,7 @@ services:
         VAULT_SERVER_KEY_PATH: ${VAULT_SERVER_KEY_PATH:-./credentials/crypto/server/vault/server.key}
         VAULT_CA_PATH: ${VAULT_CA_PATH:-./credentials/crypto/ca/vault/ca.crt}
     container_name: ${VAULT_CONTAINER_NAME:-ats-vault}
+    restart: unless-stopped
     cap_add:
       - IPC_LOCK
     ports:
