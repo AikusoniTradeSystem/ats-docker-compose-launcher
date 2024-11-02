@@ -27,11 +27,15 @@ services:
     ports:
       - "${USER_DB_PORT:-5432}:5432"
     volumes:
-      - ${USER_DB_PG_DATA:-./storage/pg_data}:/var/lib/postgresql/data
-      - ${USER_DB_PG_INIT:-./db_conf/user_db/init}:/docker-entrypoint-initdb.d
+      - user_db_pg_data:/var/lib/postgresql/data
+      - user_db_pg_init:/docker-entrypoint-initdb.d
     networks:
       - ats_internal_network
 
 networks:
   ats_internal_network:
     external: true
+
+volumes:
+  user_db_pg_data:
+  user_db_pg_init:

@@ -3,6 +3,9 @@
 # Trailing comments are not allowed.
 ###
 
+# 프로젝트명 설정
+COMPOSE_PROJECT_NAME="ats"
+
 # 내부 네트워크 여부 설정
 INTERNAL_NETWORK_IS_INTERNAL=true
 VAULT_NETWORK_IS_INTERNAL=false

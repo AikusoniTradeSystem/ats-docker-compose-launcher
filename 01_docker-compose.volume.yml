@@ -1,0 +1,11 @@
+services:
+  # no service
+  dummy:
+    image: hello-world
+    container_name: volume-init-1
+
+volumes:
+  user_db_pg_init:
+    driver: local
+  user_db_pg_data:
+    driver: local

@@ -23,9 +23,7 @@ services:
 
 networks:
   ats_internal_network:
-    external: true
   ats_vault_network:
-    external: true
 
 volumes:
   ats_vault_data:

@@ -52,8 +52,5 @@ services:
 
 networks:
   ats_internal_network:
-    external: true
   ats_vault_network:
-    external: true
   ats_monitoring_network:
-    external: true
