@@ -77,10 +77,10 @@ fi
   openssl genrsa -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.key" 4096
   openssl req -new -key "${CLIENT_CRYPTO_OUTPUT_PATH}/client.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -subj "/CN=${SERVICE_NAME}_client"
   if [ -f "$CLIENT_KEY_CNF_FILE_PATH" ]; then
-    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.crt" -days 365 -CAcreateserial -extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions client_cert
+    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client_self.crt" -days 365 -CAcreateserial -extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions client_cert
   else
     echo -e "${SHELL_TEXT_WARNING}No client key configuration file found for ${SERVICE_NAME}. Proceeding with default configuration...${SHELL_TEXT_RESET}"
-    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.crt" -days 365 -CAcreateserial
+    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client_self.crt" -days 365 -CAcreateserial
   fi
 
   echo -e "${SHELL_TEXT_SUCCESS}Copying server certificate to CA directory for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
