@@ -1,0 +1,11 @@
+services:
+  # no service
+  dummy:
+    image: hello-world
+    container_name: volume-init
+    volumes:
+      - user-db-pg-data:/var/lib/postgresql/data:ro
+
+volumes:
+  user-db-pg-data:
+    driver: local

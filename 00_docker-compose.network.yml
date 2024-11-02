@@ -2,6 +2,7 @@ services:
   # no service
   dummy:
     image: hello-world
+    container_name: network-init
     networks:
       - ats_internal_network
       - ats_vault_network

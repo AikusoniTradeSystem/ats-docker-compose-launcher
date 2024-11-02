@@ -74,13 +74,9 @@ services:
 
 networks:
   ats_internal_network:
-    external: true
   ats_vault_network:
-    external: true
   ats_external_network:
-    external: true
   ats_gateway_network:
-    external: true
 
 volumes:
   frontend_landing_volume:
