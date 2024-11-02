@@ -12,7 +12,7 @@
 
   SSL_MODE="verify-full"
   SSL_SRC_ROOTCERT="${USER_DB_CA_CRYPTO_PATH}/ca_self.crt"
-  SSL_SRC_CERT="${USER_DB_CLIENT_CRYPTO_PATH}/client.crt"
+  SSL_SRC_CERT="${USER_DB_CLIENT_CRYPTO_PATH}/client_self.crt"
   SSL_SRC_KEY="${USER_DB_CLIENT_CRYPTO_PATH}/client.key"
   DB_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/database-policy.json")
 
