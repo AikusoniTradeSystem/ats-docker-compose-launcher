@@ -15,6 +15,7 @@ services:
         USER_DB_SERVER_CRT_PATH: ${USER_DB_SERVER_CRT_PATH}
         USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH}
         USER_DB_SERVER_SELF_CA_PATH: ${USER_DB_SERVER_SELF_CA_PATH}
+        USER_DB_HBA_CONFIG_PATH: ${USER_DB_HBA_CONFIG_PATH}
     container_name: ${USER_DB_CONTAINER_NAME:-ats-user-db}
     restart: unless-stopped
     environment:
@@ -24,11 +25,12 @@ services:
       USER_DB_SERVER_CRT_PATH: ${USER_DB_SERVER_CRT_PATH:-./credentials/crypto/server/user_db/server.crt}
       USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH:-./credentials/crypto/server/user_db/server.key}
       USER_DB_SERVER_SELF_CA_PATH: ${USER_DB_SERVER_SELF_CA_PATH:-./credentials/crypto/client/user_db/client.crt}
+      USER_DB_HBA_CONFIG_PATH: ${USER_DB_HBA_CONFIG_PATH:-./db_conf/user_db/conf/pg_hba.conf}
     ports:
       - "${USER_DB_PORT:-5432}:5432"
     volumes:
       - user_db_pg_data:/var/lib/postgresql/data
-      - user_db_pg_init:/docker-entrypoint-initdb.d
+      - ${USER_DB_PG_INIT:-./db_conf/user_db/init}:/docker-entrypoint-initdb.d
     networks:
       - ats_internal_network
 
@@ -38,4 +40,3 @@ networks:
 
 volumes:
   user_db_pg_data:
-  user_db_pg_init:

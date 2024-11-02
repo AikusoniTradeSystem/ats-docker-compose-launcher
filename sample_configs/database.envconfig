@@ -11,3 +11,4 @@ USER_DB_VAULT_PW="LR4SO@?9X#+vth7e"
 
 USER_DB_PG_DATA="${PG_DATA}/user_db"
 USER_DB_PG_INIT="./db_conf/user_db/init"
+USER_DB_PG_CONF="./db_conf/user_db/conf/pg_hba.conf"
