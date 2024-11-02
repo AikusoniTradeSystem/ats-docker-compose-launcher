@@ -35,5 +35,5 @@ for file in $(docker exec "$CONTAINER_NAME" /bin/sh -c "find $TARGET_DIR -type f
   colored_hash=$(generate_colored_hash "$hash_value")
 
   # 결과 출력 (MD5 부분은 그대로, 해시값만 색상 적용)
-  echo -e "\r$md5_label $colored_hash ... $file"
+  echo -e "\r$md5_label $colored_hash ... $file in $CONTAINER_NAME"
 done
