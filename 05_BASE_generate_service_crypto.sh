@@ -12,6 +12,7 @@ fi
   CLIENT_CRYPTO_OUTPUT_PATH=""
   CA_CRYPTO_OUTPUT_PATH=""
   SERVER_KEY_CNF_FILE_PATH=""
+  CLIENT_KEY_CNF_FILE_PATH=""
   SIGNING_SCRIPT_PATH=""
   EXTENSIONS="v3_req"
 
@@ -23,6 +24,7 @@ fi
       --client_crypto_path=*) CLIENT_CRYPTO_OUTPUT_PATH="${1#*=}"; shift ;;
       --ca_crypto_path=*) CA_CRYPTO_OUTPUT_PATH="${1#*=}"; shift ;;
       --server_key_cnf_file_path=*) SERVER_KEY_CNF_FILE_PATH="${1#*=}"; shift ;;
+      --client_key_cnf_file_path=*) CLIENT_KEY_CNF_FILE_PATH="${1#*=}"; shift ;;
       --signing_script=*) SIGNING_SCRIPT_PATH="${1#*=}"; shift ;;
       *) echo -e "${SHELL_TEXT_ERROR}Unknown option: $1${SHELL_TEXT_RESET}" >&2; exit 1 ;;
     esac
@@ -34,6 +36,7 @@ fi
   echo -e "${SHELL_TEXT_INFO}CLIENT_CRYPTO_OUTPUT_PATH: ${CLIENT_CRYPTO_OUTPUT_PATH}${SHELL_TEXT_RESET}"
   echo -e "${SHELL_TEXT_INFO}CA_CRYPTO_OUTPUT_PATH: ${CA_CRYPTO_OUTPUT_PATH}${SHELL_TEXT_RESET}"
   echo -e "${SHELL_TEXT_INFO}SERVER_KEY_CNF_FILE_PATH: ${SERVER_KEY_CNF_FILE_PATH}${SHELL_TEXT_RESET}"
+  echo -e "${SHELL_TEXT_INFO}CLIENT_KEY_CNF_FILE_PATH: ${CLIENT_KEY_CNF_FILE_PATH}${SHELL_TEXT_RESET}"
 
   echo -e "$MAIN_HBAR"
   echo -e "${SHELL_TEXT_INFO}Generating certificates for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
@@ -73,7 +76,12 @@ fi
   echo -e "${SHELL_TEXT_INFO}Generating client key and certificate for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
   openssl genrsa -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.key" 4096
   openssl req -new -key "${CLIENT_CRYPTO_OUTPUT_PATH}/client.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -subj "/CN=${SERVICE_NAME}_client"
-  openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.crt" -days 365 -CAcreateserial
+  if [ -f "$CLIENT_KEY_CNF_FILE_PATH" ]; then
+    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.crt" -days 365 -CAcreateserial -extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions client_cert
+  else
+    echo -e "${SHELL_TEXT_WARNING}No client key configuration file found for ${SERVICE_NAME}. Proceeding with default configuration...${SHELL_TEXT_RESET}"
+    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.crt" -days 365 -CAcreateserial
+  fi
 
   echo -e "${SHELL_TEXT_SUCCESS}Copying server certificate to CA directory for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
   cp "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" "${CA_CRYPTO_OUTPUT_PATH}/ca.crt"
