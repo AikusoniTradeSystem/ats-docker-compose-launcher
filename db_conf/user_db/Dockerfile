@@ -8,7 +8,6 @@ ARG USER_DB_SERVER_CRT_PATH=./credentials/crypto/server/user_db/server.crt
 ARG USER_DB_SERVER_KEY_PATH=./credentials/crypto/server/user_db/server.key
 ARG USER_DB_SERVER_SELF_CA_PATH=./credentials/crypto/server/user_db/server_self.crt
 ARG USER_DB_INIT_TEMPLATE_PATH=./db_conf/user_db/templates
-ARG ENTRYPOINT_PATH=./db_conf/user_db/custom_entrypoint.sh
 
 ARG VAULT_USER_ID
 ARG VAULT_USER_PW
@@ -41,9 +40,6 @@ RUN mkdir -p /docker-entrypoint-initdb.d /etc/postgresql && \
         [ -e "$file" ] || continue; \
         envsubst < "$file" > "/docker-entrypoint-initdb.d/$(basename "${file%.template}")"; \
     done
-
-COPY ${ENTRYPOINT_PATH} /usr/local/bin/custom_entrypoint.sh
-RUN chmod +x /usr/local/bin/custom_entrypoint.sh
 
 CMD ["postgres", "-c", "ssl=on", \
      "-c", "ssl_cert_file=/etc/ssl/certs/server.crt", \
