@@ -2,91 +2,144 @@
 
 # 실행 확인
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
-  echo -e "${SHELL_TEXT_ERROR}Error: This script must be executed from another shell script.${SHELL_TEXT_RESET}"
+  echo -e "${SHELL_TEXT_ERROR}Error: This script must be executed from another shell script."
   exit 1
 fi
 
 (
+  source load_function.sh
+
   SERVICE_NAME=""
-  SERVER_CRYPTO_OUTPUT_PATH=""
-  CLIENT_CRYPTO_OUTPUT_PATH=""
-  CA_CRYPTO_OUTPUT_PATH=""
   SERVER_KEY_CNF_FILE_PATH=""
   CLIENT_KEY_CNF_FILE_PATH=""
-  SIGNING_SCRIPT_PATH=""
-  EXTENSIONS="v3_req"
+  SERVER_PRIVATE_KEY_PATH=""
+  CLIENT_PRIVATE_KEY_PATH=""
+  SERVER_CSR_FILE_PATH=""
+  CLIENT_CSR_FILE_PATH=""
+  SERVER_CERT_FILE_PATH=""
+  CLIENT_CERT_FILE_PATH=""
+  SERVER_PUBLIC_CERT_PATH=""
+  CLIENT_PUBLIC_CERT_PATH=""
+  SERVER_SELF_SIGNED_CERT_PATH=""
+  SERVER_SELF_SIGNED_PUBLIC_CERT_PATH=""
+  SERVER_SIGNED_CLIENT_CERT_PATH=""
+  SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH=""
+  SIGNING_SCRIPT_CMD=""
+  SERVER_EXTENSIONS="v3_req"
+  CLIENT_EXTENSIONS="client_cert"
 
   # 명령행 인자를 처리하는 while 루프
   while [[ "$#" -gt 0 ]]; do
     case $1 in
       --service_name=*) SERVICE_NAME="${1#*=}"; shift ;;
-      --server_crypto_path=*) SERVER_CRYPTO_OUTPUT_PATH="${1#*=}"; shift ;;
-      --client_crypto_path=*) CLIENT_CRYPTO_OUTPUT_PATH="${1#*=}"; shift ;;
-      --ca_crypto_path=*) CA_CRYPTO_OUTPUT_PATH="${1#*=}"; shift ;;
       --server_key_cnf_file_path=*) SERVER_KEY_CNF_FILE_PATH="${1#*=}"; shift ;;
       --client_key_cnf_file_path=*) CLIENT_KEY_CNF_FILE_PATH="${1#*=}"; shift ;;
-      --signing_script=*) SIGNING_SCRIPT_PATH="${1#*=}"; shift ;;
-      *) echo -e "${SHELL_TEXT_ERROR}Unknown option: $1${SHELL_TEXT_RESET}" >&2; exit 1 ;;
+      --server_private_key_path=*) SERVER_PRIVATE_KEY_PATH="${1#*=}"; shift ;;
+      --client_private_key_path=*) CLIENT_PRIVATE_KEY_PATH="${1#*=}"; shift ;;
+      --server_csr_file_path=*) SERVER_CSR_FILE_PATH="${1#*=}"; shift ;;
+      --client_csr_file_path=*) CLIENT_CSR_FILE_PATH="${1#*=}"; shift ;;
+      --server_cert_file_path=*) SERVER_CERT_FILE_PATH="${1#*=}"; shift ;;
+      --client_cert_file_path=*) CLIENT_CERT_FILE_PATH="${1#*=}"; shift ;;
+      --server_public_cert_path=*) SERVER_PUBLIC_CERT_PATH="${1#*=}"; shift ;;
+      --client_public_cert_path=*) CLIENT_PUBLIC_CERT_PATH="${1#*=}"; shift ;;
+      --server_self_signed_cert_path=*) SERVER_SELF_SIGNED_CERT_PATH="${1#*=}"; shift ;;
+      --server_self_signed_public_cert_path=*) SERVER_SELF_SIGNED_PUBLIC_CERT_PATH="${1#*=}"; shift ;;
+      --server_signed_client_cert_path=*) SERVER_SIGNED_CLIENT_CERT_PATH="${1#*=}"; shift ;;
+      --server_signed_client_public_cert_path=*) SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH="${1#*=}"; shift ;;
+      --server_extensions=*) SERVER_EXTENSIONS="${1#*=}"; shift ;;
+      --client_extensions=*) CLIENT_EXTENSIONS="${1#*=}"; shift ;;
+      --signing_script_cmd=*) SIGNING_SCRIPT_CMD="${1#*=}"; shift ;;
+      *) log e "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
 
   # 인자 목록 출력
-  echo -e "${SHELL_TEXT_INFO}SERVICE_NAME: ${SERVICE_NAME}${SHELL_TEXT_RESET}"
-  echo -e "${SHELL_TEXT_INFO}SERVER_CRYPTO_OUTPUT_PATH: ${SERVER_CRYPTO_OUTPUT_PATH}${SHELL_TEXT_RESET}"
-  echo -e "${SHELL_TEXT_INFO}CLIENT_CRYPTO_OUTPUT_PATH: ${CLIENT_CRYPTO_OUTPUT_PATH}${SHELL_TEXT_RESET}"
-  echo -e "${SHELL_TEXT_INFO}CA_CRYPTO_OUTPUT_PATH: ${CA_CRYPTO_OUTPUT_PATH}${SHELL_TEXT_RESET}"
-  echo -e "${SHELL_TEXT_INFO}SERVER_KEY_CNF_FILE_PATH: ${SERVER_KEY_CNF_FILE_PATH}${SHELL_TEXT_RESET}"
-  echo -e "${SHELL_TEXT_INFO}CLIENT_KEY_CNF_FILE_PATH: ${CLIENT_KEY_CNF_FILE_PATH}${SHELL_TEXT_RESET}"
+  log i "Generating certificates for ${SERVICE_NAME}..."
+  log d "SERVICE_NAME: ${SERVICE_NAME}"
+  log d "SERVER_KEY_CNF_FILE_PATH: ${SERVER_KEY_CNF_FILE_PATH}"
+  log d "CLIENT_KEY_CNF_FILE_PATH: ${CLIENT_KEY_CNF_FILE_PATH}"
+  log d "SERVER_PRIVATE_KEY_PATH: ${SERVER_PRIVATE_KEY_PATH}"
+  log d "CLIENT_PRIVATE_KEY_PATH: ${CLIENT_PRIVATE_KEY_PATH}"
+  log d "SERVER_CSR_FILE_PATH: ${SERVER_CSR_FILE_PATH}"
+  log d "CLIENT_CSR_FILE_PATH: ${CLIENT_CSR_FILE_PATH}"
+  log d "SERVER_CERT_FILE_PATH: ${SERVER_CERT_FILE_PATH}"
+  log d "CLIENT_CERT_FILE_PATH: ${CLIENT_CERT_FILE_PATH}"
+  log d "SERVER_PUBLIC_CERT_PATH: ${SERVER_PUBLIC_CERT_PATH}"
+  log d "CLIENT_PUBLIC_CERT_PATH: ${CLIENT_PUBLIC_CERT_PATH}"
+  log d "SERVER_SELF_SIGNED_CERT_PATH: ${SERVER_SELF_SIGNED_CERT_PATH}"
+  log d "SERVER_SELF_SIGNED_PUBLIC_CERT_PATH: ${SERVER_SELF_SIGNED_PUBLIC_CERT_PATH}"
+  log d "SERVER_SIGNED_CLIENT_CERT_PATH: ${SERVER_SIGNED_CLIENT_CERT_PATH}"
+  log d "SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH: ${SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH}"
+  log d "SIGNING_SCRIPT_CMD: ${SIGNING_SCRIPT_CMD}"
+  log i "========================================"
 
-  echo -e "$MAIN_HBAR"
-  echo -e "${SHELL_TEXT_INFO}Generating certificates for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-
-  echo -e "${SHELL_TEXT_INFO}Creating directories for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-  mkdir -p "${SERVER_CRYPTO_OUTPUT_PATH}" "${CLIENT_CRYPTO_OUTPUT_PATH}" "${CA_CRYPTO_OUTPUT_PATH}"
-
-  echo -e "${SHELL_TEXT_INFO}Generating server key for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-  openssl genrsa -out "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" 4096
+  log i "Generating server key for ${SERVICE_NAME}..."
+  openssl genrsa -out "${SERVER_PRIVATE_KEY_PATH}" 4096
 
   # CSR 생성
-  echo -e "${SHELL_TEXT_INFO}Generating CSR with config file for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
   if [ -f "$SERVER_KEY_CNF_FILE_PATH" ]; then
-    openssl req -new -key "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" -config "$SERVER_KEY_CNF_FILE_PATH"
+    log i "Generating server CSR with config file for ${SERVICE_NAME}..."
+    openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}" -config "${SERVER_KEY_CNF_FILE_PATH}"
   else
-    echo -e "${SHELL_TEXT_ERROR}No key configuration file found for ${SERVICE_NAME}.${SHELL_TEXT_RESET}"
-    echo -e "${SHELL_TEXT_INFO}Generating CSR without a config file for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-    openssl req -new -key "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${SERVER_CRYPTO_OUTPUT_PATH}/server.csr"
+    log w "No key configuration file found for ${SERVICE_NAME}."
+    log w "Generating server CSR without a config file for ${SERVICE_NAME}..."
+    openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}"
   fi
 
   # 서명 스크립트 호출
-  if [ -n "$SIGNING_SCRIPT_PATH" ] && [ -f "$SIGNING_SCRIPT_PATH" ]; then
-    echo -e "${SHELL_TEXT_INFO}Submitting CSR to signing script: $SIGNING_SCRIPT_PATH${SHELL_TEXT_RESET}"
+  if [ -n "$SIGNING_SCRIPT_CMD" ]; then
+    FULL_SIGNING_SCRIPT_CMD="$SIGNING_SCRIPT_CMD --csr=\"${SERVER_CSR_FILE_PATH}\" --output=\"${SERVER_CERT_FILE_PATH}\""
     if [ -f "$SERVER_KEY_CNF_FILE_PATH" ]; then
-      bash "$SIGNING_SCRIPT_PATH" --csr="${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" --output="${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" --conf="$SERVER_KEY_CNF_FILE_PATH" --extensions="$EXTENSIONS"
-    else
-      bash "$SIGNING_SCRIPT_PATH" --csr="${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" --output="${SERVER_CRYPTO_OUTPUT_PATH}/server.crt"
+      FULL_SIGNING_SCRIPT_CMD="$FULL_SIGNING_SCRIPT_CMD --conf=\"$SERVER_KEY_CNF_FILE_PATH\" --extensions=\"$SERVER_EXTENSIONS\""
     fi
-  else
-    echo -e "${SHELL_TEXT_WARNING}Signing script not found or not specified. Proceeding with self-signing...${SHELL_TEXT_RESET}"
+
+    log i "Signing server certificate for ${SERVICE_NAME} using the signing script... ${FULL_SIGNING_SCRIPT_CMD}"
+    eval "$FULL_SIGNING_SCRIPT_CMD"
   fi
 
-  echo -e "${SHELL_TEXT_INFO}Self-signing the server certificate for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-  openssl x509 -req -in "${SERVER_CRYPTO_OUTPUT_PATH}/server.csr" -signkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -days 365 --extfile "$SERVER_KEY_CNF_FILE_PATH" -extensions "$EXTENSIONS"
+  if [ -n "$SERVER_SELF_SIGNED_CERT_PATH" ]; then
+    log i "Self-signing the server certificate for ${SERVICE_NAME}..."
+    openssl x509 -req -in "${SERVER_CSR_FILE_PATH}" -signkey "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_SELF_SIGNED_CERT_PATH}" -days 365 --extfile "$SERVER_KEY_CNF_FILE_PATH" -extensions "$SERVER_EXTENSIONS"
+  fi
 
-  echo -e "$SUB_HBAR"
-  echo -e "${SHELL_TEXT_INFO}Generating client key and certificate for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-  openssl genrsa -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.key" 4096
-  openssl req -new -key "${CLIENT_CRYPTO_OUTPUT_PATH}/client.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -subj "/CN=${SERVICE_NAME}_client"
+  log i "----------------------------------------"
+  log i "Generating client key and certificate for ${SERVICE_NAME}..."
+  openssl genrsa -out "${CLIENT_PRIVATE_KEY_PATH}" 4096
   if [ -f "$CLIENT_KEY_CNF_FILE_PATH" ]; then
-    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client_self.crt" -days 365 -CAcreateserial -extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions client_cert
+    log i "Generating client CSR with config file for ${SERVICE_NAME}..."
+    openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -config "${CLIENT_KEY_CNF_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
   else
-    echo -e "${SHELL_TEXT_WARNING}No client key configuration file found for ${SERVICE_NAME}. Proceeding with default configuration...${SHELL_TEXT_RESET}"
-    openssl x509 -req -in "${CLIENT_CRYPTO_OUTPUT_PATH}/client.csr" -CA "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" -CAkey "${SERVER_CRYPTO_OUTPUT_PATH}/server.key" -out "${CLIENT_CRYPTO_OUTPUT_PATH}/client_self.crt" -days 365 -CAcreateserial
+    log w "No client key configuration file found for ${SERVICE_NAME}."
+    log w "Generating CSR without a config file for ${SERVICE_NAME}..."
+    openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
   fi
 
-  echo -e "${SHELL_TEXT_SUCCESS}Copying server certificate to CA directory for ${SERVICE_NAME}...${SHELL_TEXT_RESET}"
-  cp "${SERVER_CRYPTO_OUTPUT_PATH}/server.crt" "${CA_CRYPTO_OUTPUT_PATH}/ca.crt"
-  cp "${SERVER_CRYPTO_OUTPUT_PATH}/server_self.crt" "${CA_CRYPTO_OUTPUT_PATH}/ca_self.crt"
+  if [ -n "$SIGNING_SCRIPT_CMD" ]; then
+    FULL_SIGNING_SCRIPT_CMD="$SIGNING_SCRIPT_CMD --csr=\"${CLIENT_CSR_FILE_PATH}\" --output=\"${CLIENT_CERT_FILE_PATH}\""
+    if [ -f "$CLIENT_KEY_CNF_FILE_PATH" ]; then
+      FULL_SIGNING_SCRIPT_CMD="$FULL_SIGNING_SCRIPT_CMD --conf=\"$CLIENT_KEY_CNF_FILE_PATH\" --extensions=\"$CLIENT_EXTENSIONS\""
+    fi
 
-  echo -e "${SHELL_TEXT_BOLD_GREEN}==> Finished generating certificates for ${SERVICE_NAME}.${SHELL_TEXT_RESET}"
-  echo -e "$MAIN_HBAR"
+    log i "Signing client certificate for ${SERVICE_NAME} using the signing script... ${FULL_SIGNING_SCRIPT_CMD}"
+    eval "$FULL_SIGNING_SCRIPT_CMD"
+  fi
+
+  if [ -n "$SERVER_SIGNED_CLIENT_CERT_PATH" ]; then
+    log i "Signing the client certificate for ${SERVICE_NAME} with the server certificate..."
+    openssl x509 -req -in "${CLIENT_CSR_FILE_PATH}" -CA "${SERVER_CERT_FILE_PATH}" -CAkey "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_SIGNED_CLIENT_CERT_PATH}" -days 365 --extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions "$CLIENT_EXTENSIONS" -CAcreateserial
+  fi
+
+  log i "Copying server certificate to CA directory for ${SERVICE_NAME}..."
+  cp "${SERVER_CERT_FILE_PATH}" "${SERVER_PUBLIC_CERT_PATH}"
+  cp "${CLIENT_CERT_FILE_PATH}" "${CLIENT_PUBLIC_CERT_PATH}"
+
+  if [ -n "$SERVER_SELF_SIGNED_PUBLIC_CERT_PATH" ]; then
+    cp "${SERVER_SELF_SIGNED_CERT_PATH}" "${SERVER_SELF_SIGNED_PUBLIC_CERT_PATH}"
+  fi
+  if [ -n "$SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH" ]; then
+    cp "${SERVER_SIGNED_CLIENT_CERT_PATH}" "${SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH}"
+  fi
+
+  log s "==> Finished generating certificates for ${SERVICE_NAME}."
+  log s "========================================"
 )
