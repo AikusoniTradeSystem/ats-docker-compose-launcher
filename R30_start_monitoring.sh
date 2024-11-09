@@ -1,7 +1,13 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:  Start Monitoring Script
+# Description:  This script starts the monitoring services.
+# ==============================================
+
 (
     source load_env.sh
+    source load_function.sh
 
     # determine the architecture to build cadvisor image
     ARCH=$(uname -m)

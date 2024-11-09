@@ -1,11 +1,19 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Configure Vault Database AppRole
+# Description:  This script configures the Vault database AppRole.
+# Information:  This script is executed by other scripts to configure the Vault database AppRole.
+# ==============================================
+
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
   echo -e "Error: This script must be executed from another shell script."
   exit 1
 fi
 
 (
+  source load_function.sh
+
   DB_ALIAS=""
   APP_ROLE_PREFIX=""
   VAULT_POLICY_TOKEN=""

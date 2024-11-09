@@ -1,11 +1,19 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Enable Vault Engine
+# Description:	This script enables the specified engine in Vault.
+# Information:  This script is used by other scripts to enable the specified engine in Vault.
+# ==============================================
+
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
   echo -e "Error: This script must be executed from another shell script."
   exit 1
 fi
 
 (
+  source load_function.sh
+
   ENGINE_TYPE=""
   ENGINE_NAME=""
   VAULT_POLICY_TOKEN=""
@@ -20,9 +28,11 @@ fi
     esac
   done
 
-  echo -e "ENGINE_TYPE: $ENGINE_TYPE"
-  echo -e "ENGINE_NAME: $ENGINE_NAME"
-#  echo -e "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
+  log i "Enabling Vault Engine: ${ENGINE_NAME}"
+  log i "Engine Type: ${ENGINE_TYPE}"
+  log i "Engine Name: ${ENGINE_NAME}"
+#  log i "Vault Policy Token: ${VAULT_POLICY_TOKEN}"
 
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault ${ENGINE_TYPE} enable "${ENGINE_NAME}"
+  exit_on_error "Failed to enable Vault Engine: ${ENGINE_NAME}" 1
 )

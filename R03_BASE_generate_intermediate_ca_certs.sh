@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Generate Intermediate CA Base Script
+# Description:	This script is base scripts to generate the intermediate CA key and intermediate CA certificate using the custom configuration file.
+# Information:  This script is used by other scripts.
+# ==============================================
+
 # 실행 확인
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
   echo -e "${SHELL_TEXT_ERROR}Error: This script must be executed from another shell script.${SHELL_TEXT_RESET}"
@@ -42,10 +48,10 @@ fi
   log d "EXTENSIONS: ${EXTENSIONS}"
 
   # Generate Intermediate CA key
-  openssl genrsa -out "${INTERMEDIATE_CA_PRIVATE_KEY_PATH}" 4096
+  try openssl genrsa -out "${INTERMEDIATE_CA_PRIVATE_KEY_PATH}" 4096
 
   # Generate intermediate CA certificate using the custom config file
-  openssl req -new -key "${INTERMEDIATE_CA_PRIVATE_KEY_PATH}" \
+  try openssl req -new -key "${INTERMEDIATE_CA_PRIVATE_KEY_PATH}" \
     -out "${INTERMEDIATE_CA_CSR_FILE_PATH}" \
     -config "${INTERMEDIATE_CA_CNF_PATH}"
 
@@ -56,6 +62,7 @@ fi
       FULL_SIGNING_SCRIPT_CMD="$FULL_SIGNING_SCRIPT_CMD --conf=\"$INTERMEDIATE_CA_CNF_PATH\" --extensions=\"$EXTENSIONS\""
     fi
     eval "$FULL_SIGNING_SCRIPT_CMD"
+    exit_on_error "Intermediate CA certificate signing failed."
   else
     log e "No signing script found."
     exit 1

@@ -1,7 +1,13 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:  Start Services Script (Develop)
+# Description:  This script starts the services develop version.
+# ==============================================
+
 (
   source load_env.sh
+  source load_function.sh
 
   # host environment variables
   export NGINX_LOG_HOME=./logs/nginx

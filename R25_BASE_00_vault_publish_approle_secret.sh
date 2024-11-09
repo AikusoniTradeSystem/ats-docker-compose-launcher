@@ -1,11 +1,19 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:  Publish Vault AppRole Secret Script
+# Description:  This script publishes the Vault AppRole secret.
+# Information:  This script is executed by other scripts to publish the Vault AppRole secret.
+# ==============================================
+
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
   echo -e "Error: This script must be executed from another shell script."
   exit 1
 fi
 
 (
+  source load_function.sh
+
   APP_ROLE_PREFIX=""
   VAULT_POLICY_TOKEN=""
 

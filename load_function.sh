@@ -1,12 +1,30 @@
 #!/bin/bash
 
-# 에러 체크 함수 정의
-function assertResult() {
-  if [ $? -ne 0 ]; then
-    echo "Error occurred while executing: $1"
-    exit 1
-  fi
-}
+# ==============================================
+# Script Name:  functions for ats shell scripts
+# Description:	This script provides common functions for shell scripts in the ATS project.
+# ==============================================
+
+# ==============================================
+# Function List
+# ----------------------------------------------
+# -- log functions -----------------------------
+# log : Log the message with the specified log level. (usage: log <log_level> <message> / e.g., log ERROR "Error occurred.")
+# - supporting log levels: ERROR, SUCCESS, WARNING, IMPORTANT, INFO, DEBUG, VERBOSE (short: e, s, w, imp, i, d, v)
+# loge : Log the message with the ERROR log level.
+# logs : Log the message with the SUCCESS log level.
+# logw : Log the message with the WARNING log level.
+# logimp : Log the message with the IMPORTANT log level.
+# logi : Log the message with the INFO log level.
+# logd : Log the message with the DEBUG log level.
+# logv : Log the message with the VERBOSE log level.
+# ----------------------------------------------
+# -- error handling functions ------------------
+# exit_on_error : Check the error status of the previous command and exit if an error occurs.
+# handle_error : Handle the error and exit the script.
+# try : Execute the command and handle the error (similar to try-catch).
+# - usage: try <command>
+# ==============================================
 
 # 색상 지원 환경에 따라 해시값을 다른 색상으로 출력하는 함수
 function generate_colored_hash() {
@@ -53,16 +71,19 @@ function generate_colored_hash() {
 }
 
 # 로그 레벨 정의
-LOG_LEVEL=${LOG_LEVEL:-3} # 0: ERROR, 1: SUCCESS,WARNING, 2: INFO, 3: DEBUG, 4: VERBOSE
+LOG_LEVEL=${LOG_LEVEL:-3} # 0: ERROR / 1: SUCCESS,WARNING,IMPORTANT / 2: INFO / 3: DEBUG / 4: VERBOSE
 
+# 로그 색상 정의
 SHELL_TEXT_ERROR=${SHELL_TEXT_ERROR:-"\e[0;31m"}
+SHELL_TEXT_SUCCESS=${SHELL_TEXT_SUCCESS:-"\e[0;32m"}
 SHELL_TEXT_WARNING=${SHELL_TEXT_WARNING:-"\e[0;33m"}
+SHELL_TEXT_IMPORTANT=${SHELL_TEXT_IMPORTANT:-"\e[0;35m"}
 SHELL_TEXT_INFO=${SHELL_TEXT_INFO:-"\e[0;36m"}
 SHELL_TEXT_DEBUG=${SHELL_TEXT_DEBUG:-"\e[0;37m"}
 SHELL_TEXT_VERBOSE=${SHELL_TEXT_VERBOSE:-"\e[0;90m"}
-SHELL_TEXT_SUCCESS=${SHELL_TEXT_SUCCESS:-"\e[0;32m"}
 SHELL_TEXT_RESET=${SHELL_TEXT_RESET:-"\e[0m"}
 
+# 로그 출력 함수
 function log() {
     local level=$1
     shift
@@ -84,6 +105,9 @@ function log() {
           WARNING|w)
               [ $LOG_LEVEL -ge 1 ] && printf "${SHELL_TEXT_WARNING}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "WARNING" "$script_name" "$LINENO" "$message"
               ;;
+          IMPORTANT|imp)
+              [ $LOG_LEVEL -ge 1 ] && printf "${SHELL_TEXT_IMPORTANT}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "IMPORTANT" "$script_name" "$LINENO" "$message"
+              ;;
           INFO|i)
               [ $LOG_LEVEL -ge 2 ] && printf "${SHELL_TEXT_INFO}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "INFO" "$script_name" "$LINENO" "$message"
               ;;
@@ -99,26 +123,61 @@ function log() {
       esac
 }
 
+# 에러 로그 출력 함수
 function loge() {
     log ERROR "$@"
 }
 
+# 성공 로그 출력 함수
 function logs() {
     log SUCCESS "$@"
 }
 
+# 경고 로그 출력 함수
 function logw() {
     log WARNING "$@"
 }
 
+# 중요 로그 출력 함수
+function logimp() {
+    log IMPORTANT "$@"
+}
+
+# 정보 로그 출력 함수
 function logi() {
     log INFO "$@"
 }
 
+# 디버그 로그 출력 함수
 function logd() {
     log DEBUG "$@"
 }
 
+# 상세 로그 출력 함수
 function logv() {
     log VERBOSE "$@"
+}
+
+# 에러 체크 후 메시지 띄우고 나가는 함수
+function exit_on_error() {
+  local exit_code="${2:-1}"
+  if [ $? -ne 0 ]; then
+    log e "Error occurred: $1"
+    log e "Last executed command: $BASH_COMMAND"
+    exit "$exit_code"
+  fi
+}
+
+# 에러 처리 함수 (유사한 catch)
+function handle_error() {
+  log e "An error occurred during the execution."
+  log e "Last command: $BASH_COMMAND"
+  exit 1
+}
+
+# try-catch 유사한 기능
+function try() {
+  trap 'handle_error' ERR
+  "$@"
+  trap - ERR
 }

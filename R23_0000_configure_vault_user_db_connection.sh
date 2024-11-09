@@ -1,7 +1,15 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Configure Vault User Database
+# Description:	This script configures the user database in Vault.
+# ==============================================
+
+# TODO 볼트에 USER DB 앱롤 생성 및 DB 연결정보 저장
+
 (
   source load_env.sh
+  source load_function.sh
 
   DB_VAULT_ID="${USER_DB_VAULT_ID}"
   DB_VAULT_PW="${USER_DB_VAULT_PW}"
@@ -16,7 +24,7 @@
   SSL_SRC_KEY="${USER_DB_CLIENT_CRYPTO_PATH}/client.key"
   DB_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/database-policy.json")
 
-  ./23_BASE_00_vault_db_config.sh \
+  .R23_BASE_00_configure_vault_db.sh \
     --db_vault_id="$DB_VAULT_ID" \
     --db_vault_pw="$DB_VAULT_PW" \
     --db_alias="$DB_ALIAS" \
@@ -43,7 +51,7 @@
   APP_ROLE_PREFIX="${USER_DB_APPROLE_ALIAS}"
   APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/approle-policy.json")
 
-  ./23_BASE_10_vault_db_approle_config.sh \
+  .R23_BASE_10_configure_vault_db_approle.sh \
     --db_alias="$DB_ALIAS" \
     --app_role_prefix="$APP_ROLE_PREFIX" \
     --vault_policy_token="$APP_ROLE_VAULT_POLICY_TOKEN"

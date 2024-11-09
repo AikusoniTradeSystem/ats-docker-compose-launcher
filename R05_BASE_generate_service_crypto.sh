@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Generate Service Crypto Base Script
+# Description:	This script generates the server and client crypto for a service.
+# Information:  This script is used by other scripts.
+# ==============================================
+
 # 실행 확인
 if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
   echo -e "${SHELL_TEXT_ERROR}Error: This script must be executed from another shell script."
@@ -74,16 +80,16 @@ fi
   log i "========================================"
 
   log i "Generating server key for ${SERVICE_NAME}..."
-  openssl genrsa -out "${SERVER_PRIVATE_KEY_PATH}" 4096
+  try openssl genrsa -out "${SERVER_PRIVATE_KEY_PATH}" 4096
 
   # CSR 생성
   if [ -f "$SERVER_KEY_CNF_FILE_PATH" ]; then
     log i "Generating server CSR with config file for ${SERVICE_NAME}..."
-    openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}" -config "${SERVER_KEY_CNF_FILE_PATH}"
+    try openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}" -config "${SERVER_KEY_CNF_FILE_PATH}"
   else
     log w "No key configuration file found for ${SERVICE_NAME}."
     log w "Generating server CSR without a config file for ${SERVICE_NAME}..."
-    openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}"
+    try openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}"
   fi
 
   # 서명 스크립트 호출
@@ -95,23 +101,24 @@ fi
 
     log i "Signing server certificate for ${SERVICE_NAME} using the signing script... ${FULL_SIGNING_SCRIPT_CMD}"
     eval "$FULL_SIGNING_SCRIPT_CMD"
+    exit_on_error "Server certificate signing failed."
   fi
 
   if [ -n "$SERVER_SELF_SIGNED_CERT_PATH" ]; then
     log i "Self-signing the server certificate for ${SERVICE_NAME}..."
-    openssl x509 -req -in "${SERVER_CSR_FILE_PATH}" -signkey "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_SELF_SIGNED_CERT_PATH}" -days 365 --extfile "$SERVER_KEY_CNF_FILE_PATH" -extensions "$SERVER_EXTENSIONS"
+    try openssl x509 -req -in "${SERVER_CSR_FILE_PATH}" -signkey "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_SELF_SIGNED_CERT_PATH}" -days 365 --extfile "$SERVER_KEY_CNF_FILE_PATH" -extensions "$SERVER_EXTENSIONS"
   fi
 
   log i "----------------------------------------"
   log i "Generating client key and certificate for ${SERVICE_NAME}..."
-  openssl genrsa -out "${CLIENT_PRIVATE_KEY_PATH}" 4096
+  try openssl genrsa -out "${CLIENT_PRIVATE_KEY_PATH}" 4096
   if [ -f "$CLIENT_KEY_CNF_FILE_PATH" ]; then
     log i "Generating client CSR with config file for ${SERVICE_NAME}..."
-    openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -config "${CLIENT_KEY_CNF_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
+    try openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -config "${CLIENT_KEY_CNF_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
   else
     log w "No client key configuration file found for ${SERVICE_NAME}."
     log w "Generating CSR without a config file for ${SERVICE_NAME}..."
-    openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
+    try openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
   fi
 
   if [ -n "$SIGNING_SCRIPT_CMD" ]; then
@@ -122,22 +129,23 @@ fi
 
     log i "Signing client certificate for ${SERVICE_NAME} using the signing script... ${FULL_SIGNING_SCRIPT_CMD}"
     eval "$FULL_SIGNING_SCRIPT_CMD"
+    exit_on_error "Client certificate signing failed."
   fi
 
   if [ -n "$SERVER_SIGNED_CLIENT_CERT_PATH" ]; then
     log i "Signing the client certificate for ${SERVICE_NAME} with the server certificate..."
-    openssl x509 -req -in "${CLIENT_CSR_FILE_PATH}" -CA "${SERVER_CERT_FILE_PATH}" -CAkey "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_SIGNED_CLIENT_CERT_PATH}" -days 365 --extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions "$CLIENT_EXTENSIONS" -CAcreateserial
+    try openssl x509 -req -in "${CLIENT_CSR_FILE_PATH}" -CA "${SERVER_CERT_FILE_PATH}" -CAkey "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_SIGNED_CLIENT_CERT_PATH}" -days 365 --extfile "$CLIENT_KEY_CNF_FILE_PATH" -extensions "$CLIENT_EXTENSIONS" -CAcreateserial
   fi
 
   log i "Copying server certificate to CA directory for ${SERVICE_NAME}..."
-  cp "${SERVER_CERT_FILE_PATH}" "${SERVER_PUBLIC_CERT_PATH}"
-  cp "${CLIENT_CERT_FILE_PATH}" "${CLIENT_PUBLIC_CERT_PATH}"
+  try cp "${SERVER_CERT_FILE_PATH}" "${SERVER_PUBLIC_CERT_PATH}"
+  try cp "${CLIENT_CERT_FILE_PATH}" "${CLIENT_PUBLIC_CERT_PATH}"
 
   if [ -n "$SERVER_SELF_SIGNED_PUBLIC_CERT_PATH" ]; then
-    cp "${SERVER_SELF_SIGNED_CERT_PATH}" "${SERVER_SELF_SIGNED_PUBLIC_CERT_PATH}"
+    try cp "${SERVER_SELF_SIGNED_CERT_PATH}" "${SERVER_SELF_SIGNED_PUBLIC_CERT_PATH}"
   fi
   if [ -n "$SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH" ]; then
-    cp "${SERVER_SIGNED_CLIENT_CERT_PATH}" "${SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH}"
+    try cp "${SERVER_SIGNED_CLIENT_CERT_PATH}" "${SERVER_SIGNED_CLIENT_PUBLIC_CERT_PATH}"
   fi
 
   log s "==> Finished generating certificates for ${SERVICE_NAME}."

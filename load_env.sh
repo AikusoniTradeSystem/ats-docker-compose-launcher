@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Environment Variables Loader
+# Description:	This script loads the environment variables from the configuration files and checks for any changes.
+# ==============================================
+
 ###
 # 환경변수를 로딩한다.
 # 로딩시 기존에 로딩되었던 환경변수에서 변경점이 있는지 확인을 하고, 변경된 내용이 있으면 출력한다.
@@ -121,6 +126,7 @@ detect_env_changes
 # 5. 현재 세션에 환경 변수 설정
 for config_file in "${CONFIG_FILES[@]}"; do
     if [ -f "$config_file" ]; then
+      echo -e "Loading config file: $config_file"
       set -a
       source "$config_file"
       set +a
