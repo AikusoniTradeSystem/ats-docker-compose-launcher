@@ -21,7 +21,7 @@ AikusoniTradeSystem 앱을 도커를 사용해 배포할 때 사용
 (예: R00 -> R01 -> R10 -> R20 -> R21) \
 (스크립트 헤더에 붙는 숫자는 개발진행에 따라 변경될 수 있어서 생략했습니다.)
 1. 먼저 네트워크와 볼륨 초기화가 필요합니다. (start_network.sh / start_volumes.sh) )
-1. 루트 CA와 중간CA를 생성합니다. (generate_root_ca)
+1. 루트 CA와 중간CA들을 생성합니다. (generate_root_ca.sh / generate_intermediate_ca.sh)
 1. Vault를 실행합니다. (start_vault.sh)
 1. Vault를 초기화합니다. (init_vault.sh)
 1. Vault Engine들을 설치합니다.(secrets_engine_database_enable.sh 등)
