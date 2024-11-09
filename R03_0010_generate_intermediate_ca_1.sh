@@ -25,4 +25,6 @@
     --intermediate_ca_cnf_path="${INTER_CA1_CNF_FILE_PATH}" \
     --intermediate_ca_cert_pub_file_path="${INTER_CA1_PUBLIC_CERT_PATH}" \
     --extensions="v3_intermediate_ca"
+
+  try cat "${INTER_CA1_PUBLIC_CERT_PATH}" "${ROOT_CA_CERT_FILE_PATH}" > "${INTER_CA1_PUBLIC_CHAIN_CERT_PATH}"
 )
