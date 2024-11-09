@@ -171,13 +171,14 @@ function exit_on_error() {
 # 에러 처리 함수 (유사한 catch)
 function handle_error() {
   log e "An error occurred during the execution."
-  log e "Last command: $BASH_COMMAND"
+  log e "Last command: $1"
   exit 1
 }
 
 # try-catch 유사한 기능
 function try() {
-  trap 'handle_error' ERR
+  local command="$@"
+  trap 'handle_error "$command"' ERR
   "$@"
   trap - ERR
 }

@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # ==============================================
-# Script Name: Stop Services (Develop)
-# Description: This script stops the services develop image.
+# Script Name:  Stop Vault
+# Description:  This script stops the vault.
 # ==============================================
 
 (
   source load_env.sh
   source load_function.sh
 
-  try docker compose -f 40_docker-compose.develop.yml down -v
+  try docker compose -f 10_docker-compose.vault.yml down -v
 )

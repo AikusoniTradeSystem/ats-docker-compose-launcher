@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:  Stop All
+# Description:  This script stops all instances of the ats project.
+# ==============================================
+
 (
   source load_env.sh
+  source load_function.sh
 
-  docker compose -f 40_docker-compose.develop.yml down -v
-  docker compose -f 40_docker-compose.latest.yml down -v
-  docker compose -f 30_docker-compose.monitoring.yml down -v
-  docker compose -f 20_docker-compose.vault.yml down -v
-  docker compose -f 10_docker-compose.db.yml down -v
-  docker compose -f 01_docker-compose.volume.yml down -v
-  docker compose -f 00_docker-compose.network.yml down -v
+  for file in $(find . -name 'docker-compose*.yml' | sort -r)
+  do
+    try docker compose -f "$file" down -v
+  done
 )

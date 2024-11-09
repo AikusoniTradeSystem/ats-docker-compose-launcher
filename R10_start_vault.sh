@@ -6,7 +6,7 @@
 # ==============================================
 
 (
-  DOCKER_COMPOSE_FILE_NAME="20_docker-compose.vault.yml"
+  DOCKER_COMPOSE_FILE_NAME="10_docker-compose.vault.yml"
 
   source load_env.sh
   source load_function.sh
