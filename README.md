@@ -5,7 +5,7 @@
 - Docker Compose를 사용해 AikusoniTradeSystem 앱을 로컬 환경 등에서 실행할 수 있습니다.
 
 ### 간편 실행법
-- **[launch_tool.sh](./launch_to.sh)** 스크립트를 실행하면 모든 서비스를 시작합니다
+- **[launch_to.sh](./launch_to.sh)** 스크립트를 실행하면 모든 서비스를 시작합니다
   - 추가 옵션이 있으니 해당 스크립트 내부에 작성된 주석을 참조해주세요.
 - **[stop_all.sh](./stop_all.sh)** 스크립트를 실행하면 모든 서비스를 종료합니다.
 
