@@ -14,10 +14,18 @@ CONFIG_FILES_PATH="${CONFIG_FILES_PATH:-./sample_configs}"
 
 # 상대 경로 기반 config_trace 폴더 설정
 SCRIPT_DIR=$(dirname "$0")
+# 스크립트가 커맨드 라인에서 실행되는 경우 상대 경로 설정
+if [[ "$SCRIPT_DIR" == "" ]]; then
+    SCRIPT_DIR="."  # 현재 디렉토리로 설정
+fi
+
 TRACE_DIR="$SCRIPT_DIR/config_trace"
 
 # config_trace 폴더가 없으면 생성
 mkdir -p "$TRACE_DIR"
+
+echo "Script directory: $SCRIPT_DIR"
+echo "Trace directory: $TRACE_DIR"
 
 # 임시 파일 경로 설정
 TEMP_ENV_FILE_BEFORE="$TRACE_DIR/last_tracked_env_vars"
