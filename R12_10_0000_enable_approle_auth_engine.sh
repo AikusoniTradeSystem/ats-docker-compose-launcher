@@ -4,6 +4,10 @@
 # Script Name:	Enable Vault Auth Engine - AppRole
 # Description:	This script enables the AppRole auth engine in Vault.
 # ==============================================
+# Reference:
+# HashiCorp Vault AppRole Auth Method
+# ( https://developer.hashicorp.com/vault/docs/auth/approle )
+# ==============================================
 
 (
   source load_env.sh

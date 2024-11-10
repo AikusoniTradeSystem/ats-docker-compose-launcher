@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # ==============================================
-# Script Name:	Enable Vault Secrets Engine - Database
-# Description:	This script enables the database secrets engine in Vault.
+# Script Name:	Enable Vault Secrets Engine - PKI
+# Description:	This script enables the PKI secrets engine in Vault.
 # ==============================================
 # Reference:
-# HashiCorp Vault Database Secrets Engine
-# ( https://developer.hashicorp.com/vault/docs/secrets/databases )
+# HashiCorp Vault PKI Secrets Engine: Quick Start - Intermediate CA Setup
+# ( https://developer.hashicorp.com/vault/docs/secrets/pki/quick-start-intermediate-ca )
 # ==============================================
 
 (
@@ -14,7 +14,7 @@
   source load_function.sh
 
   ENGINE_TYPE="secrets"
-  ENGINE_NAME="database"
+  ENGINE_NAME="pki"
   VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/admin-policy.json")
 
   ./R12_BASE_00_enable_engine.sh \
@@ -22,5 +22,5 @@
     --engine_name="$ENGINE_NAME" \
     --vault_policy_token="$VAULT_POLICY_TOKEN"
 
-  exit_on_error "Failed to enable Vault Secrets Engine - Database."
+  exit_on_error "Failed to enable Vault Auth Engine - AppRole."
 )
