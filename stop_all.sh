@@ -9,7 +9,7 @@
   source load_env.sh
   source load_function.sh
 
-  for file in $(find . -name 'docker-compose*.yml' | sort -r)
+  for file in $(find . -name '*docker-compose*.yml' | sort -r)
   do
     try docker compose -f "$file" down -v
   done
