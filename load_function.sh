@@ -108,7 +108,7 @@ function log() {
     if [ -n "${BASH_LINENO[0]}" ]; then
         line_number="${BASH_LINENO[0]}"
     fi
-    local timestamp=$(date "+%Y-%m-%d %H:%M:%S.%3N %Z")
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S.%3N %:z")
     local log_format="${LOG_FORMAT:-%s [%-7s] [%s] (line %d) %s}"
     shift
 
