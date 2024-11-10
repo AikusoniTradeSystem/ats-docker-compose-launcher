@@ -60,5 +60,5 @@ path "sys/mounts"
 
 # Enable and manage the key/value secrets engine at `sys/` path
 path "sys/audit/*" {
-  capabilities = ["create", "update", "delete", "read"]
+  capabilities = ["create", "update", "delete", "read", "sudo"]
 }
