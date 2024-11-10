@@ -126,8 +126,8 @@
     fi
   done
 
-  log i "All scripts have been executed"
+  log s "All scripts have been executed"
   for script in $scripts_to_run; do
-    log i "  - $script"
+    log s "  - $script"
   done
 )
