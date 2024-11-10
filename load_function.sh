@@ -110,7 +110,7 @@ function log() {
     fi
     # timestamp example: 2024-11-10 12:34:56.789+09:00
     local timestamp=$(date "+%Y-%m-%d %H:%M:%S.%3N%:z")
-    local log_format="${LOG_FORMAT:-%s [%-7s] [%s] (line %d) %s}"
+    local log_format="${LOG_FORMAT:-%s [%s] [%s] (line %d) %s}"
     shift
 
     # 로그 레벨에 따른 색상 설정
