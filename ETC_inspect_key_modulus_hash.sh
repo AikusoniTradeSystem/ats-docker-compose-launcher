@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Inspect Key Modulus Hash
+# Description:	This script outputs the modulus hash of the certificate file in the specified directory.
+# ==============================================
+
 # 지정 경로의 인증서 파일의 모듈러스 해시값을 출력하는 스크립트
 # 인자가 제대로 제공되지 않으면 사용법 안내
 if [ "$#" -ne 1 ]; then

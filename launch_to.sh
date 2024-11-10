@@ -125,4 +125,9 @@
       exit 2
     fi
   done
+
+  log i "All scripts have been executed"
+  for script in $scripts_to_run; do
+    log i "  - $script"
+  done
 )

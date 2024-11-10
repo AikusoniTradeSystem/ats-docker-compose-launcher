@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ========================================
+# Script Name:	Sign CSR with CA
+# Description:  This script signs a CSR with the CA key.
+# ========================================
+
 (
   source load_function.sh
 

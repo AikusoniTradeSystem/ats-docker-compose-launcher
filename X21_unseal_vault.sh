@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:  Unseal Vault
+# Description:  This script unseals the Vault container.
+# ==============================================
+
 (
   source load_env.sh
 

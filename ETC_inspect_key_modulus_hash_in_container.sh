@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:	Inspect Key Modulus Hash in Container
+# Description:	This script outputs the modulus hash of the certificate and key files in the Docker container.
+# ==============================================
+
 # 도커 컨테이너 내부의 인증서 파일의 모듈러스 해시값을 출력하는 스크립트
 # 인자가 제대로 제공되지 않으면 사용법 안내
 if [ "$#" -ne 2 ]; then

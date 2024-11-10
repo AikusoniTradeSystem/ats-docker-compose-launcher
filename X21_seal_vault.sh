@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ==============================================
+# Script Name:  Seal Vault
+# Description:  This script seals the Vault container.
+# ==============================================
+
 (
   source load_env.sh
 
