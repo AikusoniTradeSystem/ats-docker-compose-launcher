@@ -23,4 +23,7 @@
     --vault_policy_token="$VAULT_POLICY_TOKEN"
 
   exit_on_error "Failed to enable Vault Secrets Engine - PKI."
+
+  # 기본 maxTTL을 1년(8760시간)으로 설정
+  try docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write pki/config/ca ttl="8760h"
 )
