@@ -23,6 +23,7 @@
   CLIENT_CERT_FILE_PATH="${VAULT_CLIENT_CERT_FILE_PATH}"
   SERVER_PUBLIC_CERT_PATH="${VAULT_SERVER_PUBLIC_CERT_PATH}"
   CLIENT_PUBLIC_CERT_PATH="${VAULT_CLIENT_PUBLIC_CERT_PATH}"
+  SERVER_PUBLIC_CHAIN_CERT_PATH="${VAULT_SERVER_PUBLIC_CHAIN_CERT_PATH}"
 
   log d "Create directories if they don't exist for Vault Crypto..."
   try mkdir -p "${SERVER_CRYPTO_PATH}"
@@ -45,4 +46,6 @@
                   --client_public_cert_path="${CLIENT_PUBLIC_CERT_PATH}" \
                   --signing_script_cmd="${SIGNING_SCRIPT_CMD}"
   exit_on_error "Failed to generate Vault Crypto."
+
+  try cat "${SERVER_PUBLIC_CERT_PATH}" "${INTER_CA2_PUBLIC_CHAIN_CERT_PATH}" > "${SERVER_PUBLIC_CHAIN_CERT_PATH}"
 )
