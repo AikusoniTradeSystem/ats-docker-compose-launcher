@@ -9,6 +9,9 @@
 # ==============================================
 
 (
+  source load_env.sh
+  source load_function.sh
+
   # 인자값 처리
   for arg in "$@"; do
     case $arg in
@@ -19,7 +22,7 @@
         END_SCRIPT="${arg#*=}"
         ;;
       *)
-        echo "Unknown option: $arg"
+        log e "Unknown option: $arg"
         exit 1
         ;;
     esac
@@ -34,12 +37,12 @@
 
   # 시작 스크립트명과 종료 스크립트명이 목록에 존재하는지 확인
   if [ -n "$START_SCRIPT" ] && [ -z "$start_index" ]; then
-    echo "Error: Specified start script '$START_SCRIPT' does not exist in the directory."
+    log e "Error: Specified start script '$START_SCRIPT' does not exist in the directory."
     exit 1
   fi
 
   if [ -n "$END_SCRIPT" ] && [ -z "$end_index" ]; then
-    echo "Error: Specified end script '$END_SCRIPT' does not exist in the directory."
+    log e "Error: Specified end script '$END_SCRIPT' does not exist in the directory."
     exit 1
   fi
 
@@ -55,14 +58,15 @@
   # 선택된 스크립트들을 순차적으로 실행
   for script in $scripts_to_run; do
     if [ -x "$script" ]; then
-      echo "Executing $script..."
+      log i "Executing $script..."
       ./$script
       if [ $? -ne 0 ]; then
-        echo "Error: $script failed to execute."
+        log e "Error: $script failed to execute."
         exit 1
       fi
     else
-      echo "Warning: $script is not executable. Skipping."
+      log e "Error: $script is not executable. Please check the file permission."
+      exit 2
     fi
   done
 )
