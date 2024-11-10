@@ -108,8 +108,8 @@ function log() {
     if [ -n "${BASH_LINENO[0]}" ]; then
         line_number="${BASH_LINENO[0]}"
     fi
-    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
-    local log_format="${LOG_FORMAT:-[%s] [%-7s] [%s] (line %d) %s}"
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S.%3N %Z")
+    local log_format="${LOG_FORMAT:-%s [%-7s] [%s] (line %d) %s}"
     shift
 
     # 로그 레벨에 따른 색상 설정
