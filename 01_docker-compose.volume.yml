@@ -9,3 +9,5 @@ services:
 volumes:
   user-db-pg-data:
     driver: local
+  vault-logs:
+    driver: local

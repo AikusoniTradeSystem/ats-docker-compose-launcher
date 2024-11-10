@@ -16,7 +16,8 @@ services:
     volumes:
       - ./vault/config:/vault/config:ro
       - ${VAULT_LOG_PATH:-./logs/vault}:/vault/logs
-      - ats_vault_data:/vault/data
+      - ats-vault-data:/vault/data
+      - ats-vault-logs:/vault/logs
     networks:
       - ats_internal_network
       - ats_vault_network
@@ -28,5 +29,6 @@ networks:
     external: true
 
 volumes:
-  ats_vault_data:
+  ats-vault-data:
     external: false
+  ats-vault-logs:
