@@ -7,8 +7,11 @@
 
 # ==============================================
 # Function List
+# ==============================================
+
+# ==============================================
+# log functions
 # ----------------------------------------------
-# -- log functions -----------------------------
 # log : Log the message with the specified log level. (usage: log <log_level> <message> / e.g., log ERROR "Error occurred.")
 # - supporting log levels: ERROR, SUCCESS, WARNING, IMPORTANT, INFO, DEBUG, VERBOSE (short: e, s, w, imp, i, d, v)
 # loge : Log the message with the ERROR log level.
@@ -18,8 +21,17 @@
 # logi : Log the message with the INFO log level.
 # logd : Log the message with the DEBUG log level.
 # logv : Log the message with the VERBOSE log level.
+# ==============================================
+
+# ==============================================
+# stack trace function
 # ----------------------------------------------
-# -- error handling functions ------------------
+# stack_trace : Print the stack trace of the current function call.
+# ==============================================
+
+# =============================================
+# error handling functions
+# ----------------------------------------------
 # exit_on_error : Check the error status of the previous command and exit if an error occurs.
 # handle_error : Handle the error and exit the script.
 # try : Execute the command and handle the error (similar to try-catch).
@@ -89,38 +101,58 @@ function log() {
     shift
     local message="$@"
     local script_name="N/A"
+    local line_number="N/A"
     if [ -n "${BASH_SOURCE[1]}" ]; then
         script_name=$(basename "${BASH_SOURCE[1]}")
     fi
+    if [ -n "${BASH_LINENO[0]}" ]; then
+        line_number="${BASH_LINENO[0]}"
+    fi
     local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    local log_format="${LOG_FORMAT:-[%s] [%-7s] [%s] (line %d) %s}"
+    shift
 
-    # 로그 레벨을 7자로 고정하고 색상 적용
+    # 로그 레벨에 따른 색상 설정
     case $level in
-          ERROR|e)
-              [ $LOG_LEVEL -ge 0 ] && printf "${SHELL_TEXT_ERROR}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "ERROR" "$script_name" "$LINENO" "$message"
-              ;;
-          SUCCESS|s)
-              [ $LOG_LEVEL -ge 1 ] && printf "${SHELL_TEXT_SUCCESS}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "SUCCESS" "$script_name" "$LINENO" "$message"
-              ;;
-          WARNING|w)
-              [ $LOG_LEVEL -ge 1 ] && printf "${SHELL_TEXT_WARNING}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "WARNING" "$script_name" "$LINENO" "$message"
-              ;;
-          IMPORTANT|imp)
-              [ $LOG_LEVEL -ge 1 ] && printf "${SHELL_TEXT_IMPORTANT}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "IMPORTANT" "$script_name" "$LINENO" "$message"
-              ;;
-          INFO|i)
-              [ $LOG_LEVEL -ge 2 ] && printf "${SHELL_TEXT_INFO}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "INFO" "$script_name" "$LINENO" "$message"
-              ;;
-          DEBUG|d)
-              [ $LOG_LEVEL -ge 3 ] && printf "${SHELL_TEXT_DEBUG}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "DEBUG" "$script_name" "$LINENO" "$message"
-              ;;
-          VERBOSE|v)
-              [ $LOG_LEVEL -ge 4 ] && printf "${SHELL_TEXT_VERBOSE}[%s] [%-7s] [%s] (line %d) %s${SHELL_TEXT_RESET}\n" "$timestamp" "VERBOSE" "$script_name" "$LINENO" "$message"
-              ;;
-          *)
-              printf "[%s] [%-7s] [%s] (line %d) %s\n" "$timestamp" "UNKNOWN" "$script_name" "$LINENO" "$message"
-              ;;
-      esac
+        ERROR|e)
+            local color="${SHELL_TEXT_ERROR}"
+            level="ERROR"
+            ;;
+        SUCCESS|s)
+            local color="${SHELL_TEXT_SUCCESS}"
+            level="SUCCESS"
+            ;;
+        WARNING|w)
+            local color="${SHELL_TEXT_WARNING}"
+            level="WARNING"
+            ;;
+        IMPORTANT|imp)
+            local color="${SHELL_TEXT_IMPORTANT}"
+            level="IMPORTANT"
+            ;;
+        INFO|i)
+            local color="${SHELL_TEXT_INFO}"
+            level="INFO"
+            ;;
+        DEBUG|d)
+            local color="${SHELL_TEXT_DEBUG}"
+            level="DEBUG"
+            ;;
+        VERBOSE|v)
+            local color="${SHELL_TEXT_VERBOSE}"
+            level="VERBOSE"
+            ;;
+        *)
+            local color=""
+            ;;
+    esac
+
+    # 로그 출력
+    if [ -n "$color" ]; then
+        printf "${color}${log_format}${SHELL_TEXT_RESET}\n" "$timestamp" "$level" "$script_name" "$line_number" "$message"
+    else
+        printf "${log_format}\n" "$timestamp" "$level" "$script_name" "$line_number" "$message"
+    fi
 }
 
 # 에러 로그 출력 함수
@@ -158,21 +190,40 @@ function logv() {
     log VERBOSE "$@"
 }
 
+function stack_trace() {
+  local offset="${1:-0}"
+  local error_level="${2:-DEBUG}"
+  log "$error_level" "Stack Trace:"
+  local i
+  for ((i = offset; i < ${#FUNCNAME[@]}; i++)); do
+    log "$error_level" "  ${FUNCNAME[$i]}() in ${BASH_SOURCE[$i+1]} (line: ${BASH_LINENO[$i]})"
+  done
+}
+
 # 에러 체크 후 메시지 띄우고 나가는 함수
 function exit_on_error() {
+  local last_exit_code=$?
+  local message="$1"
   local exit_code="${2:-1}"
-  if [ $? -ne 0 ]; then
-    log e "Error occurred: $1"
-    log e "Last executed command: $BASH_COMMAND"
+  local file_name="${BASH_SOURCE[1]}"
+  local line_number="${BASH_LINENO[0]}"
+
+  if [ "$last_exit_code" -ne 0 ]; then
+    log e "Error Occurred : $message"
+    log e "Error occurred in '$file_name' (line : '$line_number')."
+    log e "Last Exit code: $last_exit_code"
+    stack_trace 1 "ERROR"
     exit "$exit_code"
   fi
 }
 
-# 에러 처리 함수 (유사한 catch)
+# 에러 처리 함수
 function handle_error() {
-  log e "An error occurred during the execution."
-  log e "Last command: $1"
-  exit 1
+  local exit_code=$?
+  local command=$1
+  log e "Command that failed: $command"
+  stack_trace 2 "ERROR"
+  exit "$exit_code"
 }
 
 # try-catch 유사한 기능
