@@ -26,4 +26,12 @@ path "pki/revoke/*" {
     capabilities = []
 }
 
+audit {
+  type = "file"
+  description = "Audit logs to file"
+  options = {
+    file_path = "/vault/logs/vault_audit.log"
+  }
+}
+
 ui = true

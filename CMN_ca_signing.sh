@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ========================================
+# Script Name:	Sign CSR with CA
+# Description:  This script signs a CSR with the CA key.
+# ========================================
+
 (
   source load_function.sh
 
@@ -43,11 +48,11 @@
       exit 1
     fi
     log d "Using SAN configuration file: $CONFIG_FILE"
-    openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -out "$OUTPUT_CERT" -days "${DAYS}" -extfile "$CONFIG_FILE" -extensions "$EXTENSIONS"
+    openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -CAcreateserial -out "$OUTPUT_CERT" -days "${DAYS}" -extfile "$CONFIG_FILE" -extensions "${EXTENSIONS}"
   else
     # --conf 인자가 없는 경우 기본 설정으로 인증서 생성
     log w "No SAN configuration file provided. Using default settings."
-    openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -out "$OUTPUT_CERT" -days "${DAYS}"
+    openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -CAcreateserial -out "$OUTPUT_CERT" -days "${DAYS}"
   fi
 
   # 결과 확인

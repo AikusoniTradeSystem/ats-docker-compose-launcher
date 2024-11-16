@@ -38,6 +38,18 @@
 # - usage: try <command>
 # ==============================================
 
+# ==============================================
+# temporary directory functions
+# ----------------------------------------------
+# create_temp_dir : Create a temporary directory and map it.
+# - usage: create_temp_dir <key>
+# - recommendation usage : create_temp_dir get_current_pid (to create a temporary directory with the current process ID)
+# cleanup_temp_dirs : Clean up temporary directories when exiting.
+# - usage: cleanup_temp_dirs <key>
+# - recommendation usage : cleanup_temp_dirs get_current_pid (to clean up the temporary directory with the current process ID)
+# ==============================================
+
+
 # 색상 지원 환경에 따라 해시값을 다른 색상으로 출력하는 함수
 function generate_colored_hash() {
   local hash_value="$1"
@@ -108,8 +120,9 @@ function log() {
     if [ -n "${BASH_LINENO[0]}" ]; then
         line_number="${BASH_LINENO[0]}"
     fi
-    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
-    local log_format="${LOG_FORMAT:-[%s] [%-7s] [%s] (line %d) %s}"
+    # timestamp example: 2024-11-10 12:34:56.789+09:00
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S.%3N%:z")
+    local log_format="${LOG_FORMAT:-%s [%s] [%s] (line %d) %s}"
     shift
 
     # 로그 레벨에 따른 색상 설정
@@ -229,7 +242,46 @@ function handle_error() {
 # try-catch 유사한 기능
 function try() {
   local command="$@"
-  trap 'handle_error "$command"' ERR
+  trap "handle_error '$command'" ERR
   "$@"
   trap - ERR
+}
+
+# 임시 디렉토리 생성 및 매핑
+function create_temp_dir() {
+  local key="$1"
+  local temp_dir_list_file="./.temp_dirs_list.$key"
+  local temp_dir
+  temp_dir=$(mktemp -d)
+
+  # 배열에 매핑 저장
+  echo "$temp_dir" >> "$temp_dir_list_file"  # temp_dir_list.txt에 디렉토리 경로 기록
+
+  echo "$temp_dir"  # 디렉토리 경로 반환
+}
+
+function print_temp_dirs() {
+  local key="$1"
+  echo "Temporary directories for key: $key"
+  echo "${TEMP_DIRS["$key"]}"
+}
+
+# 임시 디렉토리 정리
+function cleanup_temp_dirs() {
+  local key="$1"
+  local temp_dir_list_file="./.temp_dirs_list.$key"
+
+  if [ -f "$temp_dir_list_file" ]; then
+    while IFS= read -r temp_dir; do
+      if [ -n "$temp_dir" ]; then
+        echo "Cleaning up temporary directory: $temp_dir"
+        rm -rf "$temp_dir"
+      fi
+    done < "$temp_dir_list_file"
+
+    # 정리 후 파일 초기화
+    rm "${temp_dir_list_file}"
+  else
+    echo "No temporary directories to clean up."
+  fi
 }

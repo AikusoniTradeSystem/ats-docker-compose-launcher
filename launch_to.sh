@@ -2,10 +2,10 @@
 
 # ==============================================
 # Script Name:    Launch To Scripts
-# Description:    This script launches scripts sequentially (sorted by name) from the provided first script to the last script.
+# Description:    This script launches scripts sequentially (sorted by name) from the provided start script to the end script.
 # ==============================================
 # Usage:
-# ./launch_to.sh --start=[start_script_prefix] --last=[last_script_prefix] [--y] [--help]
+# ./launch_to.sh --start=[start_script_prefix] --end=[end_script_prefix] [--y] [--help]
 # e.g)
 # if the directory has the following scripts:
 # R00_0000_enable_network.sh
@@ -24,7 +24,7 @@
 # R20_0020_su_su_su_super_nova.sh
 # ]
 # And, you launch the scripts from R00_00_* to R12_00_0010*, you can run the following command:
-# ./launch_to.sh --start=R00 --last=R12_00_0010
+# ./launch_to.sh --start=R00 --end=R12_00_0010
 # This command will execute the following scripts:
 # R00_0000_enable_network.sh
 # R00_0010_enable_volume.sh
@@ -46,17 +46,17 @@
       --start=*)
         START_SCRIPT_PREFIX="${arg#*=}"
         ;;
-      --last=*)
+      --end=*)
         END_SCRIPT_PREFIX="${arg#*=}"
         ;;
       --y)
         AUTO_EXEC=true
         ;;
       --help)
-        echo "Usage: $0 --start=[start_script_prefix] --last=[last_script_prefix] [--y] [--help]"
+        echo "Usage: $0 --start=[start_script_prefix] --end=[end_script_prefix] [--y] [--help]"
         echo "options:"
         echo "  --start: The prefix of the script name to start from."
-        echo "  --last: The prefix of the script name to end at."
+        echo "  --end: The prefix of the script name to end at."
         echo "  --y: Execute the scripts without confirmation."
         echo "  --help: Show this help message."
         exit 0
@@ -124,5 +124,10 @@
       log e "Error: $script is not executable. Please check the file permission."
       exit 2
     fi
+  done
+
+  log s "All scripts have been executed"
+  for script in $scripts_to_run; do
+    log s "  - $script"
   done
 )
