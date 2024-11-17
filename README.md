@@ -3,7 +3,7 @@
 > All scripts are written using utf-8 encoding.
 
 ### 개요
-- AikusoniTradeSystem ([참조 문서](https://github.com/AikusoniTradeSystem/documents)) 앱을 도커를 사용해 배포할 때 사용합니다.ㄴ
+- AikusoniTradeSystem ([참조 문서](https://github.com/AikusoniTradeSystem/documents)) 앱을 도커를 사용해 배포할 때 사용합니다.
 - Docker Compose를 사용해 AikusoniTradeSystem 앱을 로컬 환경 등에서 실행할 수 있습니다.
 
 ### 간편 실행법
