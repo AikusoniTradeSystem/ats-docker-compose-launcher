@@ -68,7 +68,7 @@ fi
     exit 1
   fi
 
-  cp "${INTERMEDIATE_CA_CERT_PATH}" "${INTERMEDIATE_CA_CERT_PUB_FILE_PATH}"
+  try cp "${INTERMEDIATE_CA_CERT_PATH}" "${INTERMEDIATE_CA_CERT_PUB_FILE_PATH}"
 
   log s "Intermediate CA key and intermediate CA certificate have been generated successfully using the custom configuration file."
 )

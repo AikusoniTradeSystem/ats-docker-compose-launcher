@@ -2,6 +2,7 @@ services:
   # no service
   initializer:
     image: alpine
+    stop_grace_period: 2s
     container_name: ${VAULT_INIT_KEYS_CONTAINER_NAME:-ats-copy-vault-init-keys}
     command: tail -f /dev/null
     volumes:

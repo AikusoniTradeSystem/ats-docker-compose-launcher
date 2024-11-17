@@ -35,12 +35,13 @@
   fi
 
   # 서명된 인증서 생성
-  log i "Signing CSR with ca key...\n"
+  log i "Signing CSR with ca key..."
   log d "ca key path: $CA_KEY_PATH"
   log d "ca cert path: $CA_CERT_PATH"
   log d "CSR file: $CSR_FILE"
   log d "Output certificate: $OUTPUT_CERT"
 
+  log d "Current directory: $(pwd)"
   # --conf 인자가 있는 경우 SAN 포함
   if [ -n "$CONFIG_FILE" ]; then
     if [ ! -f "$CONFIG_FILE" ]; then
@@ -48,11 +49,11 @@
       exit 1
     fi
     log d "Using SAN configuration file: $CONFIG_FILE"
-    openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -CAcreateserial -out "$OUTPUT_CERT" -days "${DAYS}" -extfile "$CONFIG_FILE" -extensions "${EXTENSIONS}"
+    try openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -CAcreateserial -out "$OUTPUT_CERT" -days "${DAYS}" -extfile "$CONFIG_FILE" -extensions "${EXTENSIONS}"
   else
     # --conf 인자가 없는 경우 기본 설정으로 인증서 생성
     log w "No SAN configuration file provided. Using default settings."
-    openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -CAcreateserial -out "$OUTPUT_CERT" -days "${DAYS}"
+    try openssl x509 -req -in "$CSR_FILE" -CA "$CA_CERT_PATH" -CAkey "$CA_KEY_PATH" -CAcreateserial -out "$OUTPUT_CERT" -days "${DAYS}"
   fi
 
   # 결과 확인
