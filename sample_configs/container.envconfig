@@ -6,3 +6,15 @@
 # 컨테이너 이름
 VAULT_CONTAINER_NAME="ats-vault"
 USER_DB_CONTAINER_NAME="ats-user-db"
+
+# 컨테이너 네트워크 이름
+INTERNAL_NETWORK_NAME="ats-internal-network"
+VAULT_NETWORK_NAME="ats-vault-network"
+MONITORING_NETWORK_NAME="ats-monitoring-network"
+EXTERNAL_NETWORK_NAME="ats-external-network"
+GATEWAY_NETWORK_NAME="ats-gateway-network"
+
+# 컨테이너 볼륨 이름
+USER_DB_PG_DATA_VOLUME_NAME="ats-user-db-pg-data"
+VAULT_LOGS_VOLUME_NAME="ats-vault-logs"
+VAULT_INIT_KEYS_VOLUME_NAME="ats-vault-init-keys"

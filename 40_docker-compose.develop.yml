@@ -76,12 +76,16 @@ services:
 networks:
   ats_internal_network:
     external: true
+    name: ${INTERNAL_NETWORK_NAME:-ats-internal-network}
   ats_vault_network:
     external: true
+    name: ${VAULT_NETWORK_NAME:-ats-vault-network}
   ats_external_network:
     external: true
+    name: ${EXTERNAL_NETWORK_NAME:-ats-external-network}
   ats_gateway_network:
     external: true
+    name: ${GATEWAY_NETWORK_NAME:-ats-gateway-network}
 
 volumes:
   frontend_landing_volume:

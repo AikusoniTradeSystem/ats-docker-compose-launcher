@@ -53,7 +53,10 @@ services:
 networks:
   ats_internal_network:
     external: true
+    name: ${INTERNAL_NETWORK_NAME:-ats-internal-network}
   ats_vault_network:
     external: true
+    name: ${VAULT_NETWORK_NAME:-ats-vault-network}
   ats_monitoring_network:
     external: true
+    name: ${MONITORING_NETWORK_NAME:-ats-monitoring-network}

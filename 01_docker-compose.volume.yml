@@ -1,13 +1,20 @@
 services:
   # no service
-  dummy:
-    image: hello-world
-    container_name: volume-init
+  initializer:
+    image: alpine
+    container_name: ${VOLUME_INIT_CONTAINER_NAME:-ats-init-volume}
     volumes:
       - user-db-pg-data:/var/lib/postgresql/data:ro
+      - vault-logs:/vault/logs
+      - vault-init-keys:/vault/init-keys
 
 volumes:
   user-db-pg-data:
     driver: local
+    name: ${USER_DB_PG_DATA_VOLUME_NAME:-ats-user-db-pg-data}
   vault-logs:
     driver: local
+    name: ${VAULT_LOGS_VOLUME_NAME:-ats-vault-logs}
+  vault-init-keys:
+    driver: local
+    name: ${VAULT_INIT_KEYS_VOLUME_NAME:-ats-vault-init-keys}

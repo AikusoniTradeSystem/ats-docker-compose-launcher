@@ -1,8 +1,8 @@
 services:
   # no service
-  dummy:
-    image: hello-world
-    container_name: network-init
+  initializer:
+    image: alpine
+    container_name: ${NETWORK_INIT_CONTAINER_NAME:-ats-init-network}
     networks:
       - ats_internal_network
       - ats_vault_network
@@ -14,20 +14,20 @@ networks:
   ats_internal_network:
     driver: bridge
     internal: ${INTERNAL_NETWORK_IS_INTERNAL:-true}
-    name: ats_internal_network
+    name: ${INTERNAL_NETWORK_NAME:-ats-internal-network}
   ats_vault_network:
     driver: bridge
     internal: ${VAULT_NETWORK_IS_INTERNAL:-true}
-    name: ats_vault_network
+    name: ${VAULT_NETWORK_NAME:-ats-vault-network}
   ats_monitoring_network:
     driver: bridge
     internal: ${MONITORING_NETWORK_IS_INTERNAL:-false}
-    name: ats_monitoring_network
+    name: ${MONITORING_NETWORK_NAME:-ats-monitoring-network}
   ats_external_network:
     driver: bridge
     internal: false
-    name: ats_external_network
+    name: ${EXTERNAL_NETWORK_NAME:-ats-external-network}
   ats_gateway_network:
     driver: bridge
     internal: false
-    name: ats_gateway_network
+    name: ${GATEWAY_NETWORK_NAME:-ats-gateway-network}

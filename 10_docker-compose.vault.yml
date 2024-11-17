@@ -3,10 +3,6 @@ services:
     build:
       context: .
       dockerfile: ./vault/Dockerfile
-      args:
-        VAULT_SERVER_CRT_PATH: ${VAULT_SERVER_CRT_PATH:-./credentials/crypto/server/vault/server.crt}
-        VAULT_SERVER_KEY_PATH: ${VAULT_SERVER_KEY_PATH:-./credentials/crypto/server/vault/server.key}
-        VAULT_CA_PATH: ${VAULT_CA_PATH:-./credentials/crypto/ca/vault/ca.crt}
     container_name: ${VAULT_CONTAINER_NAME:-ats-vault}
     restart: unless-stopped
     cap_add:
@@ -18,6 +14,7 @@ services:
       - ${VAULT_LOG_PATH:-./logs/vault}:/vault/logs
       - ats-vault-data:/vault/data
       - ats-vault-logs:/vault/logs
+      - ats-vault-init-keys:/vault/init-keys
     networks:
       - ats_internal_network
       - ats_vault_network
@@ -25,10 +22,18 @@ services:
 networks:
   ats_internal_network:
     external: true
+    name: ${INTERNAL_NETWORK_NAME:-ats-internal-network}
   ats_vault_network:
     external: true
+    name: ${VAULT_NETWORK_NAME:-ats-vault-network}
 
 volumes:
   ats-vault-data:
     external: false
+    name: ${VAULT_DATA_VOLUME_NAME:-ats-vault-data}
   ats-vault-logs:
+    external: true
+    name: ${VAULT_LOGS_VOLUME_NAME:-ats-vault-logs}
+  ats-vault-init-keys:
+    external: true
+    name: ${VAULT_INIT_KEYS_VOLUME_NAME:-ats-vault-init-keys}

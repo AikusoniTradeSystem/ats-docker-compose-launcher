@@ -11,10 +11,6 @@
   source CMN_load_env.sh
   source CMN_load_function.sh
 
-  export VAULT_SERVER_CRT_PATH="${VAULT_SERVER_CERT_FILE_PATH}"
-  export VAULT_SERVER_KEY_PATH="${VAULT_SERVER_PRIVATE_KEY_PATH}"
-  export VAULT_CA_PATH="${VAULT_SERVER_CERT_FILE_PATH}"
-
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" pull
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" build --no-cache
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" up -d

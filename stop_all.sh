@@ -11,6 +11,7 @@
 
   for file in $(find . -name '*docker-compose*.yml' | sort -r)
   do
+    log d "Stopping the instances of the ats project... $file"
     try docker compose -f "$file" down -v
   done
 )

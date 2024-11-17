@@ -1,0 +1,13 @@
+services:
+  # no service
+  initializer:
+    image: alpine
+    container_name: ${VAULT_INIT_KEYS_CONTAINER_NAME:-ats-copy-vault-init-keys}
+    command: tail -f /dev/null
+    volumes:
+      - vault-init-keys:/vault/init-keys
+
+volumes:
+  vault-init-keys:
+    external: true
+    name: ${VAULT_INIT_KEYS_VOLUME_NAME:-ats-vault-init-keys}

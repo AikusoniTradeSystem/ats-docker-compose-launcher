@@ -11,7 +11,7 @@
   source CMN_load_env.sh
   source CMN_load_function.sh
 
-  try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" pull
-  try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" build --no-cache
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" up -d
+  try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" stop
+  try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" rm -f
 )

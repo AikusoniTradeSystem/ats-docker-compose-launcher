@@ -34,6 +34,9 @@ services:
 networks:
   ats_internal_network:
     external: true
+    name: ${INTERNAL_NETWORK_NAME:-ats-internal-network}
 
 volumes:
   user_db_pg_data:
+    external: true
+    name: ${USER_DB_PG_DATA_VOLUME_NAME:-ats-user-db-pg-data}
