@@ -12,7 +12,7 @@ if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
 fi
 
 (
-  source load_function.sh
+  source CMN_load_function.sh
 
   APP_ROLE_PREFIX=""
   VAULT_POLICY_TOKEN=""

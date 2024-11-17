@@ -6,8 +6,8 @@
 # ==============================================
 
 (
-    source load_env.sh
-    source load_function.sh
+    source CMN_load_env.sh
+    source CMN_load_function.sh
 
     # determine the architecture to build cadvisor image
     ARCH=$(uname -m)

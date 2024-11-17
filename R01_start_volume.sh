@@ -8,8 +8,8 @@
 (
   DOCKER_COMPOSE_FILE_NAME="01_docker-compose.volume.yml"
 
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" pull
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" build --no-cache

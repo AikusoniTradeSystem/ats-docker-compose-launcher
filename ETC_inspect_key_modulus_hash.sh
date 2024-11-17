@@ -13,7 +13,7 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-source load_function.sh
+source CMN_load_function.sh
 
 # 인자로 받은 컨테이너 이름과 타겟 디렉토리 설정
 TARGET_DIR="$1"

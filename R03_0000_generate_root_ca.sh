@@ -7,8 +7,8 @@
 
 (
   # Load configuration file
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   # Create directories if they don't exist
   try mkdir -p "${ROOT_CA_CRYPTO_PATH}"

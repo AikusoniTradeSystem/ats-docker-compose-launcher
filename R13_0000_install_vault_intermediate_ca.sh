@@ -6,8 +6,8 @@
 # ==============================================
 
 (
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   TEMP_FILE_KEY="$$"
   INTERMEDIATE_CA_TEMP_DIR=$(create_temp_dir "${TEMP_FILE_KEY}")

@@ -6,8 +6,8 @@
 # ==============================================
 
 (
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   for file in $(find . -name '*docker-compose*.yml' | sort -r)
   do

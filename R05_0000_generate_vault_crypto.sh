@@ -6,8 +6,8 @@
 # ==============================================
 
 (
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   SERVICE_NAME="${VAULT_SERVICE_NAME}"
   SERVER_CRYPTO_PATH="${VAULT_SERVER_CRYPTO_PATH}"

@@ -6,8 +6,8 @@
 # ==============================================
 
 (
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   APP_ROLE_ALIAS="${USER_DB_APPROLE_ALIAS}"
   APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/approle-policy.json)

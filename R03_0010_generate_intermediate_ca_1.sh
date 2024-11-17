@@ -7,8 +7,8 @@
 
 (
   # Load configuration file
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   SIGNING_SCRIPT_CMD="./CMN_ca_signing.sh --ca_key_path=\"${ROOT_CA_PRIVATE_KEY_PATH}\" --ca_cert_path=\"${ROOT_CA_CERT_FILE_PATH}\""
 

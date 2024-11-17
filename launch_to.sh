@@ -69,8 +69,8 @@
     esac
   done
 
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   # 실행 스크립트 목록 필터링 및 정렬
   scripts=$(ls R* | grep -v 'BASE' | sort)

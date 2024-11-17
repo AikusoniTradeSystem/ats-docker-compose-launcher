@@ -10,8 +10,8 @@
 (
   DOCKER_COMPOSE_FILE_NAME="20_docker-compose.db.yml"
 
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   export USER_DB_SERVER_CRT_PATH="${USER_DB_SERVER_CRYPTO_PATH}/server_self.crt"
   export USER_DB_SERVER_KEY_PATH="${USER_DB_SERVER_CRYPTO_PATH}/server.key"

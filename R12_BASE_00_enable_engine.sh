@@ -12,7 +12,7 @@ if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
 fi
 
 (
-  source load_function.sh
+  source CMN_load_function.sh
 
   ENGINE_TYPE=""
   ENGINE_NAME=""

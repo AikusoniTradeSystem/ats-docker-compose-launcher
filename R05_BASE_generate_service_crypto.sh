@@ -13,7 +13,7 @@ if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
 fi
 
 (
-  source load_function.sh
+  source CMN_load_function.sh
 
   SERVICE_NAME=""
   SERVER_KEY_CNF_FILE_PATH=""

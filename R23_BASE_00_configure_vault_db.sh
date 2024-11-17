@@ -12,7 +12,7 @@ if [ "$0" = "sh" ] || [ "$0" = "bash" ]; then
 fi
 
 (
-  source load_function.sh
+  source CMN_load_function.sh
 
   DB_VAULT_ID=""
   DB_VAULT_PW=""

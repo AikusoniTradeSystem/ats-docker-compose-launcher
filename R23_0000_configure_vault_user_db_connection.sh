@@ -8,8 +8,8 @@
 # TODO 볼트에 USER DB 앱롤 생성 및 DB 연결정보 저장
 
 (
-  source load_env.sh
-  source load_function.sh
+  source CMN_load_env.sh
+  source CMN_load_function.sh
 
   DB_VAULT_ID="${USER_DB_VAULT_ID}"
   DB_VAULT_PW="${USER_DB_VAULT_PW}"

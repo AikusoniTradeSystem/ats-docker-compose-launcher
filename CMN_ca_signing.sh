@@ -6,7 +6,7 @@
 # ========================================
 
 (
-  source load_function.sh
+  source CMN_load_function.sh
 
   EXTENSIONS="v3_req"
 

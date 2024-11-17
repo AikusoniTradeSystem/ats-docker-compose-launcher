@@ -16,11 +16,11 @@
 - *_BASE_* 형태의 스크립트는 공용 스크립트로 05_0000_generate_vault_certs.sh 같은 다른 스크립트가 실행하므로, 직접 실행하는 스크립트가 아닙니다.
 - 관련 서비스를 실행하는 스크립트는 R로 시작합니다. (예: R00_start_network.sh)
 - 관련 서비스를 종료하는 스크립트는 D로 시작합니다. (예: D00_stop_network.sh)
-- 기타 스크립트는 X또는 ETC 등으로 시작합니다. (예: X11_seal_vault.sh, X11_unseal_vault.sh, ETC_load_env.sh)
-- 각 스크립트는 load_env.sh를 통해 환경변수를 로딩합니다.
-  - load_env.sh는 sample_configs 폴더 내의 .envconfig 파일을 로딩합니다.
-- load_function.sh에는 공통함수가 있습니다. 
-  - load_function.sh를 로딩하면 쉘 스크립트에서 log d "message" 또는 log i "message"와 같이 로그를 출력할 수 있습니다.
+- 기타 스크립트는 X또는 ETC 등으로 시작합니다. (예: X11_seal_vault.sh, X11_unseal_vault.sh, CMN_load_env.sh)
+- 각 스크립트는 CMN_load_env.sh를 통해 환경변수를 로딩합니다.
+  - CMN_load_env.sh는 sample_configs 폴더 내의 .envconfig 파일을 로딩합니다.
+- CMN_load_function.sh에는 공통함수가 있습니다. 
+  - CMN_load_function.sh를 로딩하면 쉘 스크립트에서 log d "message" 또는 log i "message"와 같이 로그를 출력할 수 있습니다.
 
 ### 스크립트 설명
 같은 유형의 모든 스크립트는 숫자 순서대로 실행되어야 합니다. \
