@@ -12,18 +12,16 @@ services:
       context: .
       dockerfile: ./db_conf/user_db/Dockerfile
       args:
-        USER_DB_SERVER_CRT_PATH: ${USER_DB_SERVER_CRT_PATH}
-        USER_DB_SERVER_KEY_PATH: ${USER_DB_SERVER_KEY_PATH}
-        USER_DB_SERVER_SELF_CA_PATH: ${USER_DB_SERVER_SELF_CA_PATH}
-        USER_DB_INIT_TEMPLATE_PATH: ${USER_DB_INIT_TEMPLATE_PATH:-./db_conf/user_db/init}
-        VAULT_USER_ID: ${USER_DB_VAULT_ID:-user}
-        VAULT_USER_PW: ${USER_DB_VAULT_PW:-user123}
+        USER_DB_INIT_TEMPLATE_PATH: ${USER_DB_INIT_TEMPLATE_PATH:-./db_conf/user_db/templates}
+        SSL_PATH_IN_CONTAINER: ${USER_DB_CERT_PATH_IN_CONTAINER:-/etc/ssl/certs}
     container_name: ${USER_DB_CONTAINER_NAME:-ats-user-db}
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
+      VAULT_USER_ID: ${USER_DB_VAULT_ID:-user}
+      VAULT_USER_PW: ${USER_DB_VAULT_PW:-user123}
     ports:
       - "${USER_DB_PORT:-5432}:5432"
     volumes:
