@@ -14,6 +14,7 @@
   INTERMEDIATE_CA_CSR_PATH="${INTERMEDIATE_CA_TEMP_DIR}/intermediate.csr"
   INTERMEDIATE_CA_CNF_PATH="${VAULT_INTERMEDIATE_CA_CNF_FILE_PATH}"
   INTERMEDIATE_CA_CRT_PATH="${INTERMEDIATE_CA_TEMP_DIR}/intermediate.crt"
+  INTERMEDIATE_CA_CHAIN_CRT_PATH="${INTERMEDIATE_CA_TEMP_DIR}/intermediate_chain.crt"
   INTERMEDIATE_CA_CRT_PATH_IN_CONTAINER="/tmp/intermediate.crt"
   print_temp_dirs ${TEMP_FILE_KEY}
 
@@ -24,6 +25,11 @@
   TTL="8760h"
   PKI_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/pki-policy.json")
 
+  try docker exec -e VAULT_TOKEN="${PKI_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write pki/config/urls \
+      issuing_certificates="${VAULT_ADDR}/v1/pki/ca" \
+      crl_distribution_points="${VAULT_ADDR}/v1/pki/crl" \
+      ocsp_servers="${VAULT_ADDR}/v1/pki/ocsp"
+
   try docker exec -e VAULT_TOKEN="${PKI_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write -format=json pki/intermediate/generate/internal \
                                                                                      common_name="ats-vault Intermediate CA" \
                                                                                      ttl="${TTL}" | jq -r '.data.csr' > "${INTERMEDIATE_CA_CSR_PATH}"
@@ -32,7 +38,10 @@
                           --csr="${INTERMEDIATE_CA_CSR_PATH}" --output="${INTERMEDIATE_CA_CRT_PATH}" \
                           --conf="${INTERMEDIATE_CA_CNF_PATH}" --extensions="v3_intermediate_ca"
 
-  try docker cp "${INTERMEDIATE_CA_CRT_PATH}" ${VAULT_CONTAINER_NAME}:${INTERMEDIATE_CA_CRT_PATH_IN_CONTAINER}
+  try cat "${INTERMEDIATE_CA_CRT_PATH}" "${INTER_CA2_CERT_FILE_PATH}" > "${INTERMEDIATE_CA_CHAIN_CRT_PATH}"
+  log d "Intermediate and root certificates combined into ${INTERMEDIATE_CA_CHAIN_CRT_PATH}"
+
+  try docker cp "${INTERMEDIATE_CA_CHAIN_CRT_PATH}" ${VAULT_CONTAINER_NAME}:${INTERMEDIATE_CA_CRT_PATH_IN_CONTAINER}
   try docker exec -e VAULT_TOKEN="${PKI_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write pki/intermediate/set-signed \
       certificate=@"${INTERMEDIATE_CA_CRT_PATH_IN_CONTAINER}"
 

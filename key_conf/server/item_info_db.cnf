@@ -18,6 +18,6 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = ats-item-info-db
+DNS.1 = ${ENV::ITEM_INFO_DB_HOST_NAME}
 
 

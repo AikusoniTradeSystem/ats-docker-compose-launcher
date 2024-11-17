@@ -7,20 +7,21 @@
 
 (
   source load_env.sh
+  source load_function.sh
 
   # 도움말 함수
   show_help() {
-      echo -e "Usage: $0 [options]"
-      echo -e ""
-      echo -e "Options:"
-      echo -e "  --key=VALUE         Provide an unseal key (can be used multiple times)"
-      echo -e "  --unseal_key=VALUE  Provide an unseal key (can be used multiple times)"
-      echo -e "  --k=VALUE           Provide an unseal key (can be used multiple times)"
-      echo -e "  --uk=VALUE          Provide an unseal key (can be used multiple times)"
-      echo -e "  --help              Show this help message and exit"
-      echo -e ""
-      echo -e "Example:"
-      echo -e "  $0 --key=XSqlmDCUlp9 --unseal_key=Xsej23k8 --k=KSkD93js --uk=Aik178s13"
+      log e "Usage: $0 [options]"
+      log e ""
+      log e "Options:"
+      log e "  --key=VALUE         Provide an unseal key (can be used multiple times)"
+      log e "  --unseal_key=VALUE  Provide an unseal key (can be used multiple times)"
+      log e "  --k=VALUE           Provide an unseal key (can be used multiple times)"
+      log e "  --uk=VALUE          Provide an unseal key (can be used multiple times)"
+      log e "  --help              Show this help message and exit"
+      log e ""
+      log e "Example:"
+      log e "  $0 --key=XSqlmDCUlp9 --unseal_key=Xsej23k8 --k=KSkD93js --uk=Aik178s13"
       exit 0
   }
 
@@ -49,13 +50,13 @@
 
   # Unseal 키가 제공되지 않았으면 오류 출력
   if [ ${#UNSEAL_KEYS[@]} -eq 0 ]; then
-      echo -e "Error: No unseal keys provided."
+      log e "Error: No unseal keys provided."
       exit 1
   fi
 
   # Vault가 unseal되어 있는지 확인하는 함수
   check_vault_status() {
-      docker exec ats-vault vault status | grep "Sealed" | awk '{print $2}'
+      docker exec ${VAULT_CONTAINER_NAME} vault status | grep "Sealed" | awk '{print $2}'
   }
 
   # Vault가 잠겨있는지 확인
@@ -65,7 +66,7 @@
     # Unseal 키 배열을 순차적으로 사용하여 Vault를 unseal
     for key in "${UNSEAL_KEYS[@]}"
     do
-      docker exec ats-vault vault operator unseal "$key"
+      docker exec ${VAULT_CONTAINER_NAME} vault operator unseal "$key"
       # Vault가 unseal 되었는지 다시 확인
       if [ "$(check_vault_status)" == "false" ]; then
         echo -e "Vault unsealed successfully."

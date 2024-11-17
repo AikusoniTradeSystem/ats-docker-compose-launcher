@@ -3,9 +3,14 @@
 # warning: Trailing comments are not allowed.
 ###
 
-# 컨테이너 이름
+# 호스트 이름 (도커인 경우 컨테이너 이름)
 VAULT_HOST_NAME="ats-vault"
 USER_DB_HOST_NAME="ats-user-db"
+ITEM_INFO_DB_HOST_NAME="ats-item-info-db"
 
 VAULT_PORT=8200
 USER_DB_PORT=5432
+
+VAULT_URL_SCHEME="https"
+VAULT_ADDR="${VAULT_URL_SCHEME}://${VAULT_HOST_NAME}:${VAULT_PORT}"
+VAULT_ADDRESS="${VAULT_ADDR}"
