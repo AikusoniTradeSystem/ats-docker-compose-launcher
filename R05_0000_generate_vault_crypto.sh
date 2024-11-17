@@ -45,8 +45,5 @@
                   --signing_script_cmd="${SIGNING_SCRIPT_CMD}"
   exit_on_error "Failed to generate Vault Crypto."
 
-  cat ${SERVER_CERT_FILE_PATH}
-  cat ${SERVER_PUBLIC_CERT_PATH}
-
   try cat "${SERVER_PUBLIC_CERT_PATH}" "${INTER_CA2_PUBLIC_CHAIN_CERT_PATH}" > "${SERVER_PUBLIC_CHAIN_CERT_PATH}"
 )
