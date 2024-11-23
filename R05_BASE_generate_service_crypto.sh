@@ -16,6 +16,7 @@ fi
   source CMN_load_function.sh
 
   SERVICE_NAME=""
+  COMMON_NAME=""
   SERVER_KEY_CNF_FILE_PATH=""
   CLIENT_KEY_CNF_FILE_PATH=""
   SERVER_PRIVATE_KEY_PATH=""
@@ -38,6 +39,7 @@ fi
   while [[ "$#" -gt 0 ]]; do
     case $1 in
       --service_name=*) SERVICE_NAME="${1#*=}"; shift ;;
+      --common_name=*) COMMON_NAME="${1#*=}"; shift ;;
       --server_key_cnf_file_path=*) SERVER_KEY_CNF_FILE_PATH="${1#*=}"; shift ;;
       --client_key_cnf_file_path=*) CLIENT_KEY_CNF_FILE_PATH="${1#*=}"; shift ;;
       --server_private_key_path=*) SERVER_PRIVATE_KEY_PATH="${1#*=}"; shift ;;
@@ -62,6 +64,7 @@ fi
   # 인자 목록 출력
   log i "Generating certificates for ${SERVICE_NAME}..."
   log d "SERVICE_NAME: ${SERVICE_NAME}"
+  log d "COMMON_NAME: ${COMMON_NAME}"
   log d "SERVER_KEY_CNF_FILE_PATH: ${SERVER_KEY_CNF_FILE_PATH}"
   log d "CLIENT_KEY_CNF_FILE_PATH: ${CLIENT_KEY_CNF_FILE_PATH}"
   log d "SERVER_PRIVATE_KEY_PATH: ${SERVER_PRIVATE_KEY_PATH}"
@@ -85,11 +88,11 @@ fi
   # CSR 생성
   if [ -f "$SERVER_KEY_CNF_FILE_PATH" ]; then
     log i "Generating server CSR with config file for ${SERVICE_NAME}..."
-    try openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}" -config "${SERVER_KEY_CNF_FILE_PATH}"
+    try openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}" -config "${SERVER_KEY_CNF_FILE_PATH}" -subj "/CN=${COMMON_NAME}"
   else
     log w "No key configuration file found for ${SERVICE_NAME}."
     log w "Generating server CSR without a config file for ${SERVICE_NAME}..."
-    try openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}"
+    try openssl req -new -key "${SERVER_PRIVATE_KEY_PATH}" -out "${SERVER_CSR_FILE_PATH}" -subj "/CN=${COMMON_NAME}"
   fi
 
   # 서명 스크립트 호출
@@ -114,11 +117,11 @@ fi
   try openssl genrsa -out "${CLIENT_PRIVATE_KEY_PATH}" 4096
   if [ -f "$CLIENT_KEY_CNF_FILE_PATH" ]; then
     log i "Generating client CSR with config file for ${SERVICE_NAME}..."
-    try openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -config "${CLIENT_KEY_CNF_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
+    try openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -config "${CLIENT_KEY_CNF_FILE_PATH}" -subj "/CN=client.${COMMON_NAME}"
   else
     log w "No client key configuration file found for ${SERVICE_NAME}."
     log w "Generating CSR without a config file for ${SERVICE_NAME}..."
-    try openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -subj "/CN=${SERVICE_NAME}_client"
+    try openssl req -new -key "${CLIENT_PRIVATE_KEY_PATH}" -out "${CLIENT_CSR_FILE_PATH}" -subj "/CN=client.${COMMON_NAME}"
   fi
 
   if [ -n "$SIGNING_SCRIPT_CMD" ]; then

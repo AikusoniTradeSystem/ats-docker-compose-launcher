@@ -9,7 +9,7 @@ ST = Gyeonggido
 L  = Pyeongtaek
 O  = AikusoniTradeSystem
 OU = Security Team
-CN = Aikusoni Root CA
+CN = ats.internal
 
 [ v3_ca ]
 # Extensions for a self-signed root CA certificate

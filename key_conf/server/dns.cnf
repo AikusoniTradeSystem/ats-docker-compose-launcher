@@ -4,9 +4,9 @@ req_extensions = v3_req
 prompt = no
 
 [ req_distinguished_name ]
-CN = item-info-db.ats.internal
+CN = dns.ats.internal
 O  = AikusoniTradeSystem
-OU = Item Team
+OU = DNS Team
 L  = Pyeongtaek
 ST = Gyeonggido
 C  = KR
@@ -18,7 +18,7 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = ${ENV::ITEM_INFO_DB_HOST_NAME}
+DNS.1 = ${ENV::DNS_HOST_NAME}
 DNS.2 = localhost
 IP.1  = 127.0.0.1
 

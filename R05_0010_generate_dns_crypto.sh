@@ -1,31 +1,32 @@
 #!/bin/bash
 
 # ==============================================
-# Script Name:	Generate Vault Crypto
-# Description:	This script generates the Vault server and client crypto.
+# Script Name:	Generate DNS Crypto
+# Description:	This script generates the DNS server and client crypto.
+# ==============================================
+# Important:    The crypto is using for only access key to core dns configuration.
 # ==============================================
 
 (
   source CMN_load_env.sh
   source CMN_load_function.sh
 
-  SERVICE_NAME="${VAULT_SERVICE_NAME}"
-  COMMON_NAME="${VAULT_HOST_NAME}"
-  SERVER_CRYPTO_PATH="${VAULT_SERVER_CRYPTO_PATH}"
-  CLIENT_CRYPTO_PATH="${VAULT_CLIENT_CRYPTO_PATH}"
-  SERVER_KEY_CNF_FILE_PATH="${VAULT_SERVER_KEY_CNF_FILE_PATH}"
-  CLIENT_KEY_CNF_FILE_PATH="${VAULT_CLIENT_KEY_CNF_FILE_PATH}"
-  SERVER_PRIVATE_KEY_PATH="${VAULT_SERVER_PRIVATE_KEY_PATH}"
-  SERVER_CSR_FILE_PATH="${VAULT_SERVER_CSR_FILE_PATH}"
-  SERVER_CERT_FILE_PATH="${VAULT_SERVER_CERT_FILE_PATH}"
-  CLIENT_PRIVATE_KEY_PATH="${VAULT_CLIENT_PRIVATE_KEY_PATH}"
-  CLIENT_CSR_FILE_PATH="${VAULT_CLIENT_CSR_FILE_PATH}"
-  CLIENT_CERT_FILE_PATH="${VAULT_CLIENT_CERT_FILE_PATH}"
-  SERVER_PUBLIC_CERT_PATH="${VAULT_SERVER_PUBLIC_CERT_PATH}"
-  CLIENT_PUBLIC_CERT_PATH="${VAULT_CLIENT_PUBLIC_CERT_PATH}"
-  SERVER_PUBLIC_CHAIN_CERT_PATH="${VAULT_SERVER_PUBLIC_CHAIN_CERT_PATH}"
+  SERVICE_NAME="${DNS_SERVICE_NAME}"
+  COMMON_NAME="${DNS_HOST_NAME}"
+  SERVER_CRYPTO_PATH="${DNS_SERVER_CRYPTO_PATH}"
+  CLIENT_CRYPTO_PATH="${DNS_CLIENT_CRYPTO_PATH}"
+  SERVER_KEY_CNF_FILE_PATH="${DNS_SERVER_KEY_CNF_FILE_PATH}"
+  CLIENT_KEY_CNF_FILE_PATH="${DNS_CLIENT_KEY_CNF_FILE_PATH}"
+  SERVER_PRIVATE_KEY_PATH="${DNS_SERVER_PRIVATE_KEY_PATH}"
+  SERVER_CSR_FILE_PATH="${DNS_SERVER_CSR_FILE_PATH}"
+  SERVER_CERT_FILE_PATH="${DNS_SERVER_CERT_FILE_PATH}"
+  CLIENT_PRIVATE_KEY_PATH="${DNS_CLIENT_PRIVATE_KEY_PATH}"
+  CLIENT_CSR_FILE_PATH="${DNS_CLIENT_CSR_FILE_PATH}"
+  CLIENT_CERT_FILE_PATH="${DNS_CLIENT_CERT_FILE_PATH}"
+  SERVER_PUBLIC_CERT_PATH="${DNS_SERVER_PUBLIC_CERT_PATH}"
+  CLIENT_PUBLIC_CERT_PATH="${DNS_CLIENT_PUBLIC_CERT_PATH}"
 
-  log d "Create directories if they don't exist for Vault Crypto..."
+  log d "Create directories if they don't exist for DNS Crypto..."
   try mkdir -p "${SERVER_CRYPTO_PATH}"
   try mkdir -p "${CLIENT_CRYPTO_PATH}"
   try mkdir -p "${PUBLIC_CERT_PATH}"
@@ -45,7 +46,5 @@
                   --server_public_cert_path="${SERVER_PUBLIC_CERT_PATH}" \
                   --client_public_cert_path="${CLIENT_PUBLIC_CERT_PATH}" \
                   --signing_script_cmd="${SIGNING_SCRIPT_CMD}"
-  exit_on_error "Failed to generate Vault Crypto."
-
-  try cat "${SERVER_PUBLIC_CERT_PATH}" "${INTER_CA2_PUBLIC_CHAIN_CERT_PATH}" > "${SERVER_PUBLIC_CHAIN_CERT_PATH}"
+  exit_on_error "Failed to generate DNS Crypto."
 )

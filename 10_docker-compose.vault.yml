@@ -18,6 +18,8 @@ services:
     networks:
       - ats_internal_network
       - ats_vault_network
+    dns:
+      - ${CUSTOM_DNS_IP}
 
 networks:
   ats_internal_network:

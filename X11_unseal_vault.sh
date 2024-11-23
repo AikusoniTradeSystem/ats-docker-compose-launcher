@@ -51,6 +51,7 @@
   # Unseal 키가 제공되지 않았으면 오류 출력
   if [ ${#UNSEAL_KEYS[@]} -eq 0 ]; then
       log e "Error: No unseal keys provided."
+      show_help
       exit 1
   fi
 

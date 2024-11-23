@@ -31,7 +31,7 @@
       ocsp_servers="${VAULT_ADDR}/v1/pki/ocsp"
 
   try docker exec -e VAULT_TOKEN="${PKI_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write -format=json pki/intermediate/generate/internal \
-                                                                                     common_name="ats-vault Intermediate CA" \
+                                                                                     common_name="ats.internal" \
                                                                                      ttl="${TTL}" | jq -r '.data.csr' > "${INTERMEDIATE_CA_CSR_PATH}"
 
   try ./CMN_ca_signing.sh --ca_key_path="${INTER_CA2_PRIVATE_KEY_PATH}" --ca_cert_path="${INTER_CA2_CERT_FILE_PATH}" \
