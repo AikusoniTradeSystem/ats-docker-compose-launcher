@@ -1,4 +1,0 @@
-[ client_cert ]
-basicConstraints = critical, CA:FALSE
-keyUsage = critical, digitalSignature
-extendedKeyUsage = clientAuth

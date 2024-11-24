@@ -3,12 +3,8 @@
 # warning: Trailing comments are not allowed.
 ###
 
-# DNS
-DNS_CORE_FILE_PATH="./dns/Corefile"
-
 # 호스트 이름 (도커인 경우 컨테이너 이름)
 VAULT_HOST_NAME="vault.ats.internal"
-DNS_HOST_NAME="dns.ats.internal"
 USER_DB_HOST_NAME="user-db.ats.internal"
 ITEM_INFO_DB_HOST_NAME="item-info-db.ats.internal"
 

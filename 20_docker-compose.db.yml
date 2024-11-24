@@ -27,7 +27,9 @@ services:
     volumes:
       - user_db_pg_data:/var/lib/postgresql/data
     networks:
-      - ats_internal_network
+      ats_internal_network:
+        aliases:
+          - ${USER_DB_HOST_NAME:-user-db.ats.internal}
 
 networks:
   ats_internal_network:

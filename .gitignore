@@ -4,7 +4,6 @@ certs/*
 pg_data/*
 credentials/*
 config_trace/*
-dns/*
 
 !logs/
 !storage/

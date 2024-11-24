@@ -16,10 +16,12 @@ services:
       - ats-vault-logs:/vault/logs
       - ats-vault-init-keys:/vault/init-keys
     networks:
-      - ats_internal_network
-      - ats_vault_network
-    dns:
-      - ${CUSTOM_DNS_IP}
+      ats_internal_network:
+        aliases:
+          - ${VAULT_HOST_NAME:-vault.ats.internal}
+      ats_vault_network:
+        aliases:
+          - ${VAULT_HOST_NAME:-vault.ats.internal}
 
 networks:
   ats_internal_network:
