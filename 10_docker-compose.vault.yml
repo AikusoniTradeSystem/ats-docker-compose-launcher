@@ -15,6 +15,8 @@ services:
       - ats-vault-data:/vault/data
       - ats-vault-logs:/vault/logs
       - ats-vault-init-keys:/vault/init-keys
+    extra_hosts:
+      - "${BARE_HOST_NAME:-ats.internal}:127.0.0.1"
     networks:
       ats_internal_network:
         aliases:

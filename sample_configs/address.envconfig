@@ -4,6 +4,7 @@
 ###
 
 # 호스트 이름 (도커인 경우 컨테이너 이름)
+BARE_HOST_NAME="ats.internal"
 VAULT_HOST_NAME="vault.ats.internal"
 USER_DB_HOST_NAME="user-db.ats.internal"
 ITEM_INFO_DB_HOST_NAME="item-info-db.ats.internal"
