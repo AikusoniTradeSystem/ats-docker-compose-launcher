@@ -20,4 +20,4 @@ VAULT_LOGS_VOLUME_NAME="ats-vault-logs"
 VAULT_INIT_KEYS_VOLUME_NAME="ats-vault-init-keys"
 
 # User DB 컨테이너 내 인증서 파일 경로
-USER_DB_CERT_PATH_IN_CONTAINER="/etc/ssl/certs"
+USER_DB_CERT_PATH_IN_CONTAINER="/var/lib/postgresql/ssl"

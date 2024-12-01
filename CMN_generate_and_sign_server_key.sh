@@ -25,6 +25,7 @@ fi
   PRIVATE_KEY_OUTPUT_PATH=""
   CSR_OUTPUT_PATH=""
   CERTIFICATE_OUTPUT_PATH=""
+  CA_CHAIN_OUTPUT_PATH=""
 
   # 명령행 인자를 처리하는 while 루프
   while [[ "$#" -gt 0 ]]; do
@@ -38,6 +39,7 @@ fi
       --private_key_output_path=*) PRIVATE_KEY_OUTPUT_PATH="${1#*=}"; shift ;;
       --csr_output_path=*) CSR_OUTPUT_PATH="${1#*=}"; shift ;;
       --certificate_output_path=*) CERTIFICATE_OUTPUT_PATH="${1#*=}"; shift ;;
+      --ca_chain_output_path=*) CA_CHAIN_OUTPUT_PATH="${1#*=}"; shift ;;
       *) echo -e "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
@@ -56,11 +58,13 @@ fi
   TEMP_PRIVATE_KEY_PATH="${TEMP_DIR}/private.key"
   TEMP_CSR_PATH="${TEMP_DIR}/request.csr"
   TEMP_CERTIFICATE_PATH="${TEMP_DIR}/certificate.crt"
+  TEMP_CA_CHAIN_PATH="${TEMP_DIR}/ca_chain.crt"
+  TEMP_SIGN_RESPONSE_PATH="${TEMP_DIR}/sign_response.json"
 
   # Generate PKI Role for current database
   log d "Generating PKI Role for ${SERVER_PKI_ROLE_NAME}..."
   try curl --cacert "$ACCESS_CA_CERT_PATH" \
-       --header "X-Vault-Token: ${VAULT_TOKEN}" \
+       --header "X-Vault-Token: ${VAULT_PKI_TOKEN}" \
        --request POST \
        --data '{
             "allowed_domains": "'${BARE_HOST_NAME}'",
@@ -98,17 +102,21 @@ EOF
   # Sign the certificate
   log d "Signing the certificate... ${TEMP_CERTIFICATE_PATH}"
   try curl --cacert "$ACCESS_CA_CERT_PATH" \
-    --header "X-Vault-Token: ${VAULT_TOKEN}" \
+    --header "X-Vault-Token: ${VAULT_PKI_TOKEN}" \
     --header "Content-Type: application/json" \
     --request POST \
     --data "$(jq -n --arg csr "$(cat $TEMP_CSR_PATH)" '{csr: $csr}')" \
-    "https://localhost:8200/v1/pki/sign/${SERVER_PKI_ROLE_NAME}" | jq -r '.data.certificate' > "$TEMP_CERTIFICATE_PATH"
+    "https://localhost:8200/v1/pki/sign/${SERVER_PKI_ROLE_NAME}" > "$TEMP_SIGN_RESPONSE_PATH"
+
+  try jq -r '.data.certificate' "$TEMP_SIGN_RESPONSE_PATH" > "$TEMP_CERTIFICATE_PATH"
+  try jq -r '.data.ca_chain[]' "$TEMP_SIGN_RESPONSE_PATH" > "$TEMP_CA_CHAIN_PATH"
 
   # Copy the certificate to the output path
   log d "Copying the certificate to the output path..."
   try cp "$TEMP_PRIVATE_KEY_PATH" "$PRIVATE_KEY_OUTPUT_PATH"
   try cp "$TEMP_CSR_PATH" "$CSR_OUTPUT_PATH"
   try cp "$TEMP_CERTIFICATE_PATH" "$CERTIFICATE_OUTPUT_PATH"
+  try cp "$TEMP_CA_CHAIN_PATH" "$CA_CHAIN_OUTPUT_PATH"
 
   # cleanup temp dirs
   log i "Cleaning up temp dirs..."

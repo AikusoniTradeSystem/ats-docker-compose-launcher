@@ -38,7 +38,7 @@
                           --csr="${INTERMEDIATE_CA_CSR_PATH}" --output="${INTERMEDIATE_CA_CRT_PATH}" \
                           --conf="${INTERMEDIATE_CA_CNF_PATH}" --extensions="v3_intermediate_ca"
 
-  try cat "${INTERMEDIATE_CA_CRT_PATH}" "${INTER_CA2_CERT_FILE_PATH}" > "${INTERMEDIATE_CA_CHAIN_CRT_PATH}"
+  try cat "${INTERMEDIATE_CA_CRT_PATH}" "${INTER_CA2_PUBLIC_CHAIN_CERT_PATH}" > "${INTERMEDIATE_CA_CHAIN_CRT_PATH}"
   log d "Intermediate and root certificates combined into ${INTERMEDIATE_CA_CHAIN_CRT_PATH}"
 
   try docker cp "${INTERMEDIATE_CA_CHAIN_CRT_PATH}" ${VAULT_CONTAINER_NAME}:${INTERMEDIATE_CA_CRT_PATH_IN_CONTAINER}
