@@ -242,7 +242,9 @@ function handle_error() {
 # try-catch 유사한 기능
 function try() {
   local command="$@"
-  trap "handle_error '$command'" ERR
+  local lineno=${BASH_LINENO[0]}
+  local filename=${BASH_SOURCE[1]}
+  trap "handle_error '$command' at $filename:$lineno" ERR
   "$@"
   trap - ERR
 }

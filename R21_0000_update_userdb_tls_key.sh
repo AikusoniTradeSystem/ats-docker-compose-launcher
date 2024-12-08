@@ -56,5 +56,5 @@
   try docker compose -f "${DOCKER_COMPOSE_FILE_NAME}" restart "${SERVICE_NAME}"
 
   print_temp_dirs "${TEMP_KEY}"
-#  cleanup_temp_dirs "${TEMP_KEY}"
+  cleanup_temp_dirs "${TEMP_KEY}"
 )

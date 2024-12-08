@@ -21,7 +21,7 @@ fi
   DB_HOST=""
   DB_PORT=""
   SSL_MODE=""
-  SSL_SRC_ROOTCERT=""
+  SSL_CA_CHAIN=""
   SSL_SRC_CERT=""
   SSL_SRC_KEY=""
   VAULT_POLICY_TOKEN=""
@@ -36,7 +36,7 @@ fi
       --db_host=*) DB_HOST="${1#*=}"; shift ;;
       --db_port=*) DB_PORT="${1#*=}"; shift ;;
       --ssl_mode=*) SSL_MODE="${1#*=}"; shift ;;
-      --ssl_src_rootcert=*) SSL_SRC_ROOTCERT="${1#*=}"; shift ;;
+      --ssl_ca_chain=*) SSL_CA_CHAIN="${1#*=}"; shift ;;
       --ssl_src_cert=*) SSL_SRC_CERT="${1#*=}"; shift ;;
       --ssl_src_key=*) SSL_SRC_KEY="${1#*=}"; shift ;;
       --vault_policy_token=*) VAULT_POLICY_TOKEN="${1#*=}"; shift ;;
@@ -54,7 +54,7 @@ fi
   echo -e "DB_HOST: $DB_HOST"
   echo -e "DB_PORT: $DB_PORT"
   echo -e "SSL_MODE: $SSL_MODE"
-  echo -e "SSL_SRC_ROOTCERT: $SSL_SRC_ROOTCERT"
+  echo -e "SSL_CA_CHAIN: $SSL_CA_CHAIN"
   echo -e "SSL_SRC_CERT: $SSL_SRC_CERT"
   echo -e "SSL_SRC_KEY: $SSL_SRC_KEY"
   echo -e "SSL_DEST_DIR: $SSL_DEST_DIR"
@@ -64,7 +64,7 @@ fi
   echo -e "Copying SSL certificates to the Vault container..."
   docker exec ${VAULT_CONTAINER_NAME} mkdir -p ${SSL_DEST_DIR}
   exit_on_error "Failed to create directory for SSL certificates."
-  docker cp "$SSL_SRC_ROOTCERT" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/ca.crt
+  docker cp "$SSL_CA_CHAIN" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/ca.crt
   exit_on_error "Failed to copy root certificate."
   docker cp "$SSL_SRC_CERT" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/client.crt
   exit_on_error "Failed to copy client certificate."
