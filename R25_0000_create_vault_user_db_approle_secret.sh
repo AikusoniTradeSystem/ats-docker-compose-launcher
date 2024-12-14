@@ -10,7 +10,7 @@
   source CMN_load_function.sh
 
   APP_ROLE_ALIAS="${USER_DB_APPROLE_ALIAS}"
-  APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/databse-approle-policy.json)
+  APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' ./credentials/vault/init/database-approle-policy.json)
 
   APP_ROLE_PREFIX="${APP_ROLE_ALIAS}"
 
