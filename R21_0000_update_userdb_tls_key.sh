@@ -8,6 +8,7 @@
 (
   source CMN_load_env.sh
   source CMN_load_function.sh
+  source CMN_load_adcl_common_function.sh
 
   DOCKER_COMPOSE_FILE_NAME="20_docker-compose.db.yml"
 
@@ -27,6 +28,8 @@
   CONTAINER_PRIVATE_KEY_PATH="${USER_DB_CERT_PATH_IN_CONTAINER}/server.key"
   CONTAINER_CERTIFICATE_PATH="${USER_DB_CERT_PATH_IN_CONTAINER}/server.crt"
   CONTAINER_CA_CHAIN_PATH="${USER_DB_CERT_PATH_IN_CONTAINER}/ca.crt"
+
+  wait_until_elapsed "$SERVER_CONTAINER_NAME" 60 3
 
   try ./CMN_generate_and_sign_server_key.sh \
     --vault_pki_token="${VAULT_PKI_POLICY_TOKEN}" \
