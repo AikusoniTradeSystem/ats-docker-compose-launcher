@@ -40,28 +40,26 @@ wait_until_elapsed() {
     local container_name="$1"
     local required_seconds="$2"
     local max_retries="$3"
-    local retry_interval="$required_seconds"
 
     echo "Checking elapsed time for container: $container_name..."
 
-    for ((i=1; i<=max_retries; i++)); do
+    for ((retry=1; retry<=max_retries; retry++)); do
         local elapsed_time=$(get_elapsed_time "$container_name")
         if [ $? -ne 0 ]; then
-            echo "Failed to get elapsed time for container '$container_name'. Retrying... ($i/$max_retries)"
-            sleep "$retry_interval"
+            echo "Failed to get elapsed time for container '$container_name'. Retrying... ($retry/$max_retries)"
+            sleep 5
             continue
         fi
 
-        if [ "$elapsed_time" -lt "$required_seconds" ]; then
+        while [ "$elapsed_time" -lt "$required_seconds" ]; do
             local remaining_time=$((required_seconds - elapsed_time))
-            echo "Attempt $i/$max_retries: Container '$container_name' has been running for $elapsed_time seconds. Waiting for $remaining_time seconds..."
-            sleep "$remaining_time"
-        else
-            echo "Container '$container_name' has been running for $elapsed_time seconds. Proceeding with further actions."
-            return 0
-        fi
+            echo -ne "Elapsed: ${elapsed_time}s, Waiting for ${remaining_time}s to complete...\r"
+            sleep 1
+            elapsed_time=$(get_elapsed_time "$container_name")
+        done
 
-        sleep "$retry_interval"
+        echo -e "\nContainer '$container_name' has been running for $elapsed_time seconds. Proceeding with further actions."
+        return 0
     done
 
     echo "Max retries reached. Container '$container_name' did not meet the required elapsed time of $required_seconds seconds."
