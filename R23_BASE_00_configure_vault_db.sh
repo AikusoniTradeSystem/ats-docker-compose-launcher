@@ -92,7 +92,7 @@ fi
   exit_on_error "Failed to configure database connection."
 
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write "database/roles/${DB_ALIAS}" \
-      db_name="${DB_NAME}" \
+      db_name="${DB_ALIAS}" \
       creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT, DELETE, UPDATE, INSERT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
       default_ttl="1h" \
       max_ttl="24h"
