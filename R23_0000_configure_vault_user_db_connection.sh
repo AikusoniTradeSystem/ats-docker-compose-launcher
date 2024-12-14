@@ -62,7 +62,7 @@
   exit_on_error "Failed to configure the vault database."
 
   APP_ROLE_PREFIX="${USER_DB_APPROLE_ALIAS}"
-  APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/approle-policy.json")
+  APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/database-approle-policy.json")
 
   try ./R23_BASE_10_configure_vault_db_approle.sh \
     --db_alias="$DB_ALIAS" \

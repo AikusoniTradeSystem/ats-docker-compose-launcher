@@ -33,7 +33,7 @@ fi
 #  log d "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # 정책 내용을 생성하여 파일에 저장
-  POLICY_PATH="./credentials/vault/gen-policies/sub/approle"
+  POLICY_PATH="${VAULT_APPROLE_GEN_POLICY_PATH}"
   POLICY_FILE="${POLICY_PATH}/${APP_ROLE_PREFIX}-role.hcl"
   VAULT_POLICY_PATH="/vault/gen-policies/sub/approle"
   VAULT_POLICY_FILE="${VAULT_POLICY_PATH}/${APP_ROLE_PREFIX}-role.hcl"

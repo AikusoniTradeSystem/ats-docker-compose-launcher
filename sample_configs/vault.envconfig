@@ -4,6 +4,7 @@
 ###
 
 VAULT_CREDENTIAL_INIT_PATH="./credentials/vault/init"
+VAULT_APPROLE_GEN_POLICY_PATH="./credentials/vault/gen-policies/sub/approle"
 
 VAULT_KEY_SHARES=10
 VAULT_KEY_THRESHOLD=3

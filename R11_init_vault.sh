@@ -40,7 +40,7 @@
   log s "Vault initialized, unsealed with 3 keys, and logged in with Root Token."
 
   # 정책 이름 배열
-  policies=("approle-policy" "database-policy" "pki-policy" "admin-policy")
+  policies=("approle-policy" "database-policy" "pki-policy" "admin-policy" "database-approle-policy")
 
   # 정책 파일 적용 및 정책 기반 토큰 생성
   for policy in "${policies[@]}"; do
