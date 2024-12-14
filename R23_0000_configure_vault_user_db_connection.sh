@@ -46,7 +46,7 @@
   SSL_SRC_KEY="${TEMP_PRIVATE_KEY_PATH}"
   DB_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/database-policy.json")
 
-  ./R23_BASE_00_configure_vault_db.sh \
+  try ./R23_BASE_00_configure_vault_db.sh \
     --db_vault_id="$DB_VAULT_ID" \
     --db_vault_pw="$DB_VAULT_PW" \
     --db_alias="$DB_ALIAS" \
@@ -64,7 +64,7 @@
   APP_ROLE_PREFIX="${USER_DB_APPROLE_ALIAS}"
   APP_ROLE_VAULT_POLICY_TOKEN=$(awk -F'"' '/"client_token"/ {print $4}' "${VAULT_CREDENTIAL_INIT_PATH}/approle-policy.json")
 
-  ./R23_BASE_10_configure_vault_db_approle.sh \
+  try ./R23_BASE_10_configure_vault_db_approle.sh \
     --db_alias="$DB_ALIAS" \
     --app_role_prefix="$APP_ROLE_PREFIX" \
     --vault_policy_token="$APP_ROLE_VAULT_POLICY_TOKEN"

@@ -22,15 +22,15 @@ fi
     case $1 in
       --app_role_prefix=*) APP_ROLE_PREFIX="${1#*=}"; shift ;;
       --vault_policy_token=*) VAULT_POLICY_TOKEN="${1#*=}"; shift ;;
-      *) echo -e "Unknown option: $1" >&2; exit 1 ;;
+      *) log e "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
 
   ROLE_NAME="sub-policy-${APP_ROLE_PREFIX}-role"
 
-  echo -e "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
-  echo -e "ROLE_NAME: $ROLE_NAME"
-#  echo -e "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
+  log d "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
+  log d "ROLE_NAME: $ROLE_NAME"
+#  log d "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # Vault의 앱롤 시크릿 획득
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault read "auth/approle/role/${ROLE_NAME}/role-id"

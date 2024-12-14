@@ -40,28 +40,28 @@ fi
       --ssl_src_cert=*) SSL_SRC_CERT="${1#*=}"; shift ;;
       --ssl_src_key=*) SSL_SRC_KEY="${1#*=}"; shift ;;
       --vault_policy_token=*) VAULT_POLICY_TOKEN="${1#*=}"; shift ;;
-      *) echo -e "Unknown option: $1" >&2; exit 1 ;;
+      *) log e "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
 
   # 경로 변수 설정
   SSL_DEST_DIR="/etc/ssl/certs/client/${DB_NAME}"
 
-  echo -e "DB_VAULT_ID: $DB_VAULT_ID"
-  echo -e "DB_VAULT_PW: $DB_VAULT_PW"
-  echo -e "DB_ALIAS: $DB_ALIAS"
-  echo -e "DB_NAME: $DB_NAME"
-  echo -e "DB_HOST: $DB_HOST"
-  echo -e "DB_PORT: $DB_PORT"
-  echo -e "SSL_MODE: $SSL_MODE"
-  echo -e "SSL_CA_CHAIN: $SSL_CA_CHAIN"
-  echo -e "SSL_SRC_CERT: $SSL_SRC_CERT"
-  echo -e "SSL_SRC_KEY: $SSL_SRC_KEY"
-  echo -e "SSL_DEST_DIR: $SSL_DEST_DIR"
-#  echo -e "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
+  log d "DB_VAULT_ID: $DB_VAULT_ID"
+  log d "DB_VAULT_PW: $DB_VAULT_PW"
+  log d "DB_ALIAS: $DB_ALIAS"
+  log d "DB_NAME: $DB_NAME"
+  log d "DB_HOST: $DB_HOST"
+  log d "DB_PORT: $DB_PORT"
+  log d "SSL_MODE: $SSL_MODE"
+  log d "SSL_CA_CHAIN: $SSL_CA_CHAIN"
+  log d "SSL_SRC_CERT: $SSL_SRC_CERT"
+  log d "SSL_SRC_KEY: $SSL_SRC_KEY"
+  log d "SSL_DEST_DIR: $SSL_DEST_DIR"
+#  log d "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # 인증서 파일을 /etc/ssl/certs/client/${DB_NAME} 디렉토리에 복사
-  echo -e "Copying SSL certificates to the Vault container..."
+  log d "Copying SSL certificates to the Vault container..."
   docker exec ${VAULT_CONTAINER_NAME} mkdir -p ${SSL_DEST_DIR}
   exit_on_error "Failed to create directory for SSL certificates."
   docker cp "$SSL_CA_CHAIN" ${VAULT_CONTAINER_NAME}:${SSL_DEST_DIR}/ca.crt
@@ -72,7 +72,7 @@ fi
   exit_on_error "Failed to copy client key."
 
   # 복사한 파일의 권한 설정 (Vault가 접근할 수 있도록)
-  echo -e "Setting ownership and permissions for SSL certificates..."
+  log d "Setting ownership and permissions for SSL certificates..."
   docker exec ${VAULT_CONTAINER_NAME} chown vault:vault ${SSL_DEST_DIR}/ca.crt ${SSL_DEST_DIR}/client.crt ${SSL_DEST_DIR}/client.key
   exit_on_error "Failed to change ownership of SSL certificates."
   docker exec ${VAULT_CONTAINER_NAME} chmod 600 ${SSL_DEST_DIR}/client.key

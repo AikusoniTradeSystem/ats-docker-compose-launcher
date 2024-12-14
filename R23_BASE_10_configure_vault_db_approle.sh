@@ -24,13 +24,13 @@ fi
       --db_alias=*) DB_ALIAS="${1#*=}"; shift ;;
       --app_role_prefix=*) APP_ROLE_PREFIX="${1#*=}"; shift ;;
       --vault_policy_token=*) VAULT_POLICY_TOKEN="${1#*=}"; shift ;;
-      *) echo -e "Unknown option: $1" >&2; exit 1 ;;
+      *) log e "Unknown option: $1" >&2; exit 1 ;;
     esac
   done
 
-  echo -e "DB_ALIAS: $DB_ALIAS"
-  echo -e "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
-#  echo -e "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
+  log d "DB_ALIAS: $DB_ALIAS"
+  log d "APP_ROLE_PREFIX: $APP_ROLE_PREFIX"
+#  log d "VAULT_POLICY_TOKEN: $VAULT_POLICY_TOKEN"
 
   # 정책 내용을 생성하여 파일에 저장
   POLICY_PATH="./credentials/vault/gen-policies/sub/approle"
@@ -40,7 +40,7 @@ fi
   VAULT_POLICY_NAME="sub/approle/${APP_ROLE_PREFIX}-role"
   ROLE_NAME="sub-policy-${APP_ROLE_PREFIX}-role"
 
-  echo -e "Creating policy file at: $POLICY_FILE"
+  log d "Creating policy file at: $POLICY_FILE"
 
   mkdir -p $POLICY_PATH
   cat <<EOF > "$POLICY_FILE"
@@ -55,7 +55,7 @@ EOF
 
   chmod +r $POLICY_FILE
 
-  echo -e "Policy file created at: $POLICY_FILE"
+  log d "Policy file created at: $POLICY_FILE"
 
   # 컨테이너 내부에 정책 파일을 저장할 폴더 생성
   docker exec $VAULT_CONTAINER_NAME mkdir -p $VAULT_POLICY_PATH
@@ -67,5 +67,5 @@ EOF
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault policy write "${VAULT_POLICY_NAME}" "${VAULT_POLICY_FILE}"
   docker exec -e VAULT_TOKEN="${VAULT_POLICY_TOKEN}" ${VAULT_CONTAINER_NAME} vault write "auth/approle/role/${ROLE_NAME}" token_policies="${VAULT_POLICY_NAME}"
 
-  echo -e "AppRole ${ROLE_NAME} (policy : ${VAULT_POLICY_NAME}) has been configured."
+  log d "AppRole ${ROLE_NAME} (policy : ${VAULT_POLICY_NAME}) has been configured."
 )
